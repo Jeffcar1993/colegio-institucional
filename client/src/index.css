@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Reseteo básico para que el contenido fluya correctamente de arriba hacia abajo */
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: 100vh;
+  /* Quitamos el flex y el place-items que causaban el error */
+}
+
+/* Opcional: Para que las transiciones de Tailwind se sientan más suaves */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
