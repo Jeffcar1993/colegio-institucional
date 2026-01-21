@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import Nosotros from './pages/Nosotros';
 import Contacto from './pages/Contacto';
 import Admisiones from './pages/Admisiones';
+import Footer from './layout/Footer';
+import Comunicados from './pages/Comunicados';
 
 function App() {
   return (
@@ -17,9 +19,10 @@ function App() {
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/admisiones" element={<Admisiones />} />
+            <Route path="/comunicados" element={<Comunicados />} />
           </Routes>
         </main>
-        {/* Aquí irá el Footer pronto */}
+        <Footer />
       </div>
     </Router>
   );
