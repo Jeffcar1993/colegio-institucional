@@ -6,25 +6,29 @@ const Home = () => {
   return (
     <div className="flex flex-col w-full">
       {/* SECCIÓN HERO */}
-      <section className="relative h-[600px] flex items-center justify-center text-white">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050853064-8d275e9cc9c2?q=80&w=2070')] bg-cover bg-center">
-          <div className="absolute inset-0 bg-black/60" />
-        </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6">Liderazgo y Excelencia desde 1890</h1>
-          <p className="text-xl md:text-2xl mb-8 text-slate-200">
-            Formando a las futuras generaciones de San Pedro de Jagua con valores, ciencia y cultura.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6">
-              <Link to="/admisiones">Inscripciones 2026</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-black text-lg px-8 py-6">
-              Ver Programas
-            </Button>
-          </div>
-        </div>
-      </section>
+      <section className="relative h-[600px] flex items-center justify-center text-white overflow-hidden">
+  {/* FONDO MEJORADO */}
+  <div className="absolute inset-0 bg-gradient-to-br from-green-900 via-slate-900 to-blue-900">
+    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:32px_32px]"></div>
+  </div>
+
+  <div className="relative z-10 text-center px-4 max-w-4xl">
+    <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tighter">
+      Liderazgo y Excelencia desde 1890
+    </h1>
+    <p className="text-xl md:text-2xl mb-8 text-slate-200 font-light">
+      Formando a las futuras generaciones de San Pedro de Jagua con valores, ciencia y cultura.
+    </p>
+    <div className="flex flex-wrap justify-center gap-4">
+      <Button size="lg" className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6 shadow-lg shadow-green-900/20">
+        <Link to="/admisiones">Inscripciones 2026</Link>
+      </Button>
+      <Button size="lg" variant="outline" className="text-white border-white/40 hover:bg-white hover:text-slate-900 text-lg px-8 py-6 backdrop-blur-sm">
+        Ver Programas
+      </Button>
+    </div>
+  </div>
+</section>
 
       {/* SECCIÓN PILARES */}
       <section className="py-20 bg-white">
@@ -57,7 +61,7 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">25 FEB, 2026</p>
+                <p className="text-sm text-green-700 font-bold">13 FEB, 2026</p>
                 <h4 className="font-bold">Reunión General de Padres de Familia</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
@@ -68,7 +72,7 @@ const Home = () => {
           </div>
           <div className="bg-green-900 rounded-2xl p-8 text-white">
             <h3 className="text-2xl font-bold mb-4">¿Buscas cupo?</h3>
-            <p className="mb-6">El proceso de admisiones para el segundo semestre de 2026 ya está abierto. Contamos con cupos limitados en grados de primaria.</p>
+            <p className="mb-6">El proceso de admisiones para el año lectivo 2026 ya está abierto. Te invitamos a ser parte de nuestra comunidad educativa.</p>
             <Button variant="secondary" className="w-full font-bold">Descargar Guía de Inscripción</Button>
           </div>
         </div>

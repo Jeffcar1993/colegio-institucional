@@ -6,6 +6,7 @@ import Contacto from './pages/Contacto';
 import Admisiones from './pages/Admisiones';
 import Footer from './layout/Footer';
 import Comunicados from './pages/Comunicados';
+import Galeria from './pages/Galeria';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/admisiones" element={<Admisiones />} />
             <Route path="/comunicados" element={<Comunicados />} />
+            <Route path="/galeria" element={<Galeria />} />
           </Routes>
         </main>
         <Footer />
