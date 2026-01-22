@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, MapPin, Clock } from "lucide-react";
+import { Phone, MapPin, Clock, Mail } from "lucide-react";
 
 const Contacto = () => {
   return (
@@ -30,6 +30,15 @@ const Contacto = () => {
               <div>
                 <h4 className="font-bold text-blue-900">Horario de Atención</h4>
                 <p className="text-sm text-slate-700">Lunes a Viernes: 7:00 AM - 3:00 PM</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-none shadow-none bg-green-50">
+            <CardContent className="p-6 flex items-start gap-4">
+              <Mail className="text-slate-700 shrink-0" />
+              <div>
+                <h4 className="font-bold text-slate-900">Correos</h4>
+                <p className="text-sm text-slate-700">info@ejemplo.com<br/>secretaria@ejemplo.com</p>
               </div>
             </CardContent>
           </Card>

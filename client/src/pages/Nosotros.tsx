@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FileText, Download } from "lucide-react"; // Iconos para los botones
+import { FileText} from "lucide-react"; // Iconos para los botones
 
 const Nosotros = () => {
   // Datos de los documentos para no repetir código
@@ -41,42 +41,48 @@ const Nosotros = () => {
       </section>
 
       {/* Sección de Documentos Institucionales */}
-      <section className="space-y-6">
-        <h3 className="text-3xl font-bold text-slate-800 border-b pb-2">
-          Documentos Institucionales
-        </h3>
-        
-        <div className="bg-white rounded-xl shadow-inner border p-2">
-          <ul className="divide-y divide-slate-100">
-            {documentos.map((doc, index) => (
-              <li 
-                key={index} 
-                className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 hover:bg-slate-50 transition-colors gap-4"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="bg-red-50 p-2 rounded-lg text-red-600">
-                    <FileText size={24} />
-                  </div>
-                  <span className="font-semibold text-slate-700 text-lg">
-                    {doc.nombre}
-                  </span>
-                </div>
+<section className="space-y-6">
+  <h3 className="text-3xl font-bold text-slate-800 border-b pb-2">
+    Documentos Institucionales
+  </h3>
+  
+  <div className="bg-white rounded-xl shadow-inner border p-2">
+    <ul className="divide-y divide-slate-100">
+      {documentos.map((doc, index) => (
+        <li 
+          key={index} 
+          className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 hover:bg-slate-50 transition-colors gap-4"
+        >
+          <div className="flex items-center gap-3">
+            <div className="bg-red-50 p-2 rounded-lg text-red-600">
+              <FileText size={24} />
+            </div>
+            <span className="font-semibold text-slate-700 text-lg">
+              {doc.nombre}
+            </span>
+          </div>
 
-                <Button 
-                  asChild 
-                  variant="outline" 
-                  className="border-green-700 text-green-700 hover:bg-green-50 gap-2"
-                >
-                  <a href={doc.url} download>
-                    <Download size={16} />
-                    Descargar PDF
-                  </a>
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+          <div className="flex gap-2"> {/* Contenedor para botones si quisieras agregar más */}
+            <Button 
+              asChild 
+              variant="outline" 
+              className="border-green-700 text-green-700 hover:bg-green-50 gap-2"
+            >
+              <a 
+                href={doc.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <FileText size={16} />
+                Ver Documento
+              </a>
+            </Button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
 
     </div>
   );
