@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Calendar, ChevronRight, Loader2 } from "lucide-react";
+import { Bell, Calendar, ChevronRight, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { 
@@ -18,6 +18,7 @@ interface Comunicado {
   categoria: string;
   importancia: string;
   resumen: string;
+  adjunto_url?: string; // <-- Añadir esto (opcional con ?)
   fecha_creacion: string; 
 }
 
@@ -96,7 +97,7 @@ export default function Comunicados() {
                   </DialogTrigger>
                   
                   {/* AJUSTES DE VISIBILIDAD EN DIALOGCONTENT */}
-                  <DialogContent className="w-[95vw] sm:max-w-5xl h-[90vh] flex flex-col p-0 rounded-xl shadow-2xl border-radius-lg overflow-hidden">
+                  <DialogContent className="w-[95vw] sm:max-w-5xl h-[90vh] flex flex-col p-0 rounded-xl shadow-2xl overflow-hidden border-none">
                     <DialogHeader className="p-6 pb-4 border-b bg-slate-50">
                       <div className="flex items-center gap-3 mb-2">
                         <Badge className="bg-green-600 text-white">{item.categoria}</Badge>
@@ -110,18 +111,39 @@ export default function Comunicados() {
                       </DialogDescription>
                     </DialogHeader>
                     
-                    {/* CONTENEDOR CON SCROLL PARA EL TEXTO LARGO */}
                     <div className="flex-1 overflow-y-auto p-6 sm:p-10 bg-white">
-                      <div className="prose prose-slate max-w-none">
-                        <p className="text-slate-700 text-lg leading-[1.8] whitespace-pre-wrap font-serif">
-                          {item.resumen}
-                        </p>
-                      </div>
-                      
-                      <div className="mt-12 pt-8 border-t-2 border-dashed border-slate-100 flex flex-col items-center text-center space-y-2">
-                        <div className="w-16 h-1 w-24 bg-green-700 mb-4"></div>
-                        <p className="font-bold text-slate-900 uppercase tracking-widest text-sm">Rectoría Institucional</p>
-                        <p className="text-xs text-slate-400">IED Kennedy — Educación para el futuro</p>
+                      <div className="max-w-3xl mx-auto"> {/* Centrado para mejor lectura en pantallas anchas */}
+                        <div className="prose prose-slate max-w-none">
+                          <p className="text-slate-700 text-lg leading-[1.8] whitespace-pre-wrap font-serif">
+                            {item.resumen}
+                          </p>
+                        </div>
+
+                        {/* Sección de Adjunto mejorada */}
+                        {item.adjunto_url && item.adjunto_url.trim() !== "" && (
+                          <div className="mt-12 p-6 bg-blue-50 rounded-2xl border border-blue-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                              <div className="bg-white p-3 rounded-full shadow-sm text-blue-600">
+                                <FileText size={28} />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-slate-900">Documento de Apoyo</p>
+                                <p className="text-xs text-slate-500">Material adicional para descarga</p>
+                              </div>
+                            </div>
+                            <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white px-8 h-12 rounded-xl transition-all shadow-md">
+                              <a href={item.adjunto_url} target="_blank" rel="noopener noreferrer">
+                                Ver Documento
+                              </a>
+                            </Button>
+                          </div>
+                        )}
+                        
+                        <div className="mt-16 pt-8 border-t-2 border-dashed border-slate-100 flex flex-col items-center text-center space-y-2 pb-10">
+                          <div className="w-16 h-1 bg-green-700 mb-4 opacity-30"></div>
+                          <p className="font-bold text-slate-900 uppercase tracking-widest text-sm">Rectoría Institucional</p>
+                          <p className="text-xs text-slate-400 font-medium">Institución Educativa Distrital Kennedy</p>
+                        </div>
                       </div>
                     </div>
                   </DialogContent>

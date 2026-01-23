@@ -47,11 +47,12 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
 
   const [nuevoComunicado, setNuevoComunicado] = useState({
-    titulo: "",
-    categoria: "Académico",
-    importancia: "Normal",
-    resumen: ""
-  });
+  titulo: "",
+  categoria: "Académico",
+  importancia: "Normal",
+  resumen: "",
+  adjunto_url: "" // Nuevo campo
+});
 
   const ADMIN_PASSWORD = "IED_Kennedy_2026";
 
@@ -117,26 +118,33 @@ const handleLogout = () => {
   localStorage.removeItem("admin_session"); // Limpiamos la memoria
 };
 
-  const handlePublicar = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPublicando(true);
-    try {
-      const res = await fetch("http://localhost:5000/api/comunicados", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoComunicado),
+const handlePublicar = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setPublicando(true);
+  try {
+    const res = await fetch("http://localhost:5000/api/comunicados", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevoComunicado),
+    });
+    if (res.ok) {
+      alert("Publicado con éxito");
+      // Limpiamos TODO el objeto, incluyendo el nuevo campo
+      setNuevoComunicado({ 
+        titulo: "", 
+        categoria: "Académico", 
+        importancia: "Normal", 
+        resumen: "",
+        adjunto_url: "" // <-- Importante limpiar esto también
       });
-      if (res.ok) {
-        alert("Publicado con éxito");
-        setNuevoComunicado({ titulo: "", categoria: "Académico", importancia: "Normal", resumen: "" });
-        fetchData();
-      }
-    } catch {
-      alert("Error al publicar");
-    } finally {
-      setPublicando(false);
+      fetchData();
     }
-  };
+  } catch {
+    alert("Error al publicar");
+  } finally {
+    setPublicando(false);
+  }
+};
 
   if (!isAuthenticated) {
     return (
@@ -300,6 +308,17 @@ const handleLogout = () => {
                       required 
                       className="min-h-[500px] text-lg leading-relaxed bg-white border-slate-300 focus:ring-green-500 font-serif p-6"
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700">Enlace Adjunto (Opcional)</label>
+                    <Input 
+                      placeholder="https://enlace-a-tu-pdf-o-imagen.com" 
+                      value={nuevoComunicado.adjunto_url} 
+                      onChange={(e) => setNuevoComunicado({...nuevoComunicado, adjunto_url: e.target.value})} 
+                      className="bg-blue-50/50 border-blue-100"
+                    />
+                    <p className="text-[10px] text-slate-400 italic">Puedes pegar links de Google Drive, OneDrive o imágenes directas.</p>
                   </div>
 
                   <Button 

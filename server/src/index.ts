@@ -14,19 +14,17 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Servidor IED Kennedy en TypeScript listo 🚀');
 });
 
-// Crear un nuevo comunicado
+// Busca la ruta app.post('/api/comunicados', ...) y asegúrate de que incluya adjunto_url
 app.post('/api/comunicados', async (req, res) => {
-  const { titulo, categoria, importancia, resumen } = req.body;
+  const { titulo, categoria, importancia, resumen, adjunto_url } = req.body;
   try {
-    const query = `
-      INSERT INTO comunicados (titulo, categoria, importancia, resumen)
-      VALUES ($1, $2, $3, $4) RETURNING *
-    `;
-    const result = await pool.query(query, [titulo, categoria, importancia, resumen]);
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error("Error al crear comunicado:", error);
-    res.status(500).json({ error: "Error al guardar el comunicado" });
+    const nuevoComunicado = await pool.query(
+      "INSERT INTO comunicados (titulo, categoria, importancia, resumen, adjunto_url) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [titulo, categoria, importancia, resumen, adjunto_url]
+    );
+    res.json(nuevoComunicado.rows[0]);
+  } catch (err) {
+    res.status(500).send("Error en el servidor");
   }
 });
 
