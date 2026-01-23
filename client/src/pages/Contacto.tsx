@@ -1,3 +1,4 @@
+import { useState } from "react"; // 1. Importamos useState
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -5,6 +6,49 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Phone, MapPin, Clock, Mail } from "lucide-react";
 
 const Contacto = () => {
+  // 2. Definimos el estado para los datos del formulario
+  const [formData, setFormData] = useState({
+    nombre: "",
+    correo: "",
+    asunto: "",
+    mensaje: ""
+  });
+  const [enviando, setEnviando] = useState(false);
+
+  // 3. Manejador de cambios en los inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // 4. Función para enviar los datos al Backend
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEnviando(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/contacto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("✅ Mensaje enviado con éxito. El colegio se pondrá en contacto pronto.");
+        setFormData({ nombre: "", correo: "", asunto: "", mensaje: "" }); // Limpiar campos
+      } else {
+        alert("❌ Error al enviar el mensaje. Inténtalo de nuevo.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("❌ Error de conexión con el servidor.");
+    } finally {
+      setEnviando(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-16">
       <div className="text-center mb-12">
@@ -13,7 +57,7 @@ const Contacto = () => {
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
-        {/* INFO DE CONTACTO */}
+        {/* INFO DE CONTACTO - Manteniendo tu diseño original */}
         <div className="space-y-6">
           <Card className="border-none shadow-none bg-green-50">
             <CardContent className="p-6 flex items-start gap-4">
@@ -53,47 +97,77 @@ const Contacto = () => {
           </Card>
         </div>
 
-        {/* FORMULARIO */}
+        {/* FORMULARIO - Conectado a la lógica */}
         <div className="md:col-span-2">
-          <form className="bg-white p-8 rounded-xl border shadow-sm space-y-4">
+          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl border shadow-sm space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-semibold">Nombre Completo</label>
-                <Input placeholder="Tu nombre..." />
+                <Input 
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  required
+                  placeholder="Tu nombre..." 
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold">Correo Electrónico</label>
-                <Input type="email" placeholder="correo@ejemplo.com" />
+                <Input 
+                  name="correo"
+                  type="email" 
+                  value={formData.correo}
+                  onChange={handleChange}
+                  required
+                  placeholder="correo@ejemplo.com" 
+                />
               </div>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-semibold">Asunto</label>
-              <Input placeholder="Ej. Certificado de notas" />
+              <Input 
+                name="asunto"
+                value={formData.asunto}
+                onChange={handleChange}
+                required
+                placeholder="Ej. Certificado de notas" 
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-semibold">Mensaje</label>
-              <Textarea placeholder="Escribe tu consulta aquí..." className="min-h-[150px]" />
+              <Textarea 
+                name="mensaje"
+                value={formData.mensaje}
+                onChange={handleChange}
+                required
+                placeholder="Escribe tu consulta aquí..." 
+                className="min-h-[150px]" 
+              />
             </div>
-            <Button className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-6">
-              Enviar Mensaje
+            <Button 
+              type="submit" 
+              disabled={enviando}
+              className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-6"
+            >
+              {enviando ? "Enviando..." : "Enviar Mensaje"}
             </Button>
           </form>
         </div>
       </div>
 
       {/* MAPA GOOGLE REAL */}
-      <div className="mt-16 w-full h-[450px] rounded-2xl overflow-hidden shadow-lg border border-slate-200">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.24151608444!2d-73.3276718!3d4.6464698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f59aaf5f673c1%3A0x3c81802b53984ad9!2sIERD%20Colegio%20Kennedy%20San%20Pedro%20de%20Jagua!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen={true}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Ubicación IERD Colegio Kennedy"
-        ></iframe>
-      </div>
+        <div className="mt-16 w-full h-[450px] rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.24151608444!2d-73.3276718!3d4.6464698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f59aaf5f673c1%3A0x3c81802b53984ad9!2sIERD%20Colegio%20Kennedy%20San%20Pedro%20de%20Jagua!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Ubicación IERD Colegio Kennedy"
+          ></iframe>
+        </div>
     </div>
   );
 };
