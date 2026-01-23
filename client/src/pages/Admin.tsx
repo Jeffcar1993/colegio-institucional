@@ -39,9 +39,12 @@ export default function AdminDashboard() {
   const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [comunicados, setComunicados] = useState<Comunicado[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  return localStorage.getItem("admin_session") === "true";
+});
   const [password, setPassword] = useState("");
   const [publicando, setPublicando] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [nuevoComunicado, setNuevoComunicado] = useState({
     titulo: "",
@@ -53,12 +56,13 @@ export default function AdminDashboard() {
   const ADMIN_PASSWORD = "IED_Kennedy_2026";
 
   const fetchData = async () => {
-    try {
-      const [resAdm, resMsg, resCom] = await Promise.all([
-        fetch("http://localhost:5000/api/admisiones"),
-        fetch("http://localhost:5000/api/contacto"),
-        fetch("http://localhost:5000/api/comunicados")
-      ]);
+  setLoading(true); // <--- Empezamos a cargar
+  try {
+    const [resAdm, resMsg, resCom] = await Promise.all([
+      fetch("http://localhost:5000/api/admisiones"),
+      fetch("http://localhost:5000/api/contacto"),
+      fetch("http://localhost:5000/api/comunicados")
+    ]);
       
       if (!resAdm.ok || !resMsg.ok || !resCom.ok) throw new Error("Error en el servidor");
       
@@ -70,9 +74,11 @@ export default function AdminDashboard() {
       setMensajes(Array.isArray(dataMsg) ? dataMsg : []);
       setComunicados(Array.isArray(dataCom) ? dataCom : []);
       setError(null);
-    } catch {
-      setError("Error al conectar con la base de datos.");
-    }
+    }catch {
+    setError("Error al conectar con la base de datos.");
+  } finally {
+    setLoading(false); // <--- Terminamos de cargar
+  }
   };
 
   const eliminarElemento = async (tipo: string, id: number) => {
@@ -93,15 +99,23 @@ export default function AdminDashboard() {
     if (isAuthenticated) fetchData();
   }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setPassword("");
-    } else {
-      setError("Contraseña incorrecta.");
-    }
-  };
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (password === ADMIN_PASSWORD) {
+    localStorage.setItem("admin_session", "true");
+    setIsAuthenticated(true);
+    // Disparar carga de datos inmediatamente después de autenticar
+    fetchData(); 
+    setPassword("");
+  } else {
+    setError("Contraseña incorrecta.");
+  }
+};
+
+const handleLogout = () => {
+  setIsAuthenticated(false);
+  localStorage.removeItem("admin_session"); // Limpiamos la memoria
+};
 
   const handlePublicar = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,11 +154,22 @@ export default function AdminDashboard() {
     );
   }
 
+  if (loading) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <Loader2 className="h-12 w-12 animate-spin text-green-700" />
+      <p className="mt-4 text-slate-600 font-medium">Sincronizando con el servidor institucional...</p>
+    </div>
+  );
+}
+
   return (
     <div className="container mx-auto py-10 px-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Panel Administrativo</h1>
-        <Button variant="outline" onClick={() => setIsAuthenticated(false)}><LogOut className="mr-2 h-4 w-4" /> Salir</Button>
+        <Button variant="outline" onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" /> Salir
+        </Button>
       </div>
 
       {error && (
