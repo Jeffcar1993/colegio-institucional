@@ -8,6 +8,8 @@ import Footer from './layout/Footer';
 import Comunicados from './pages/Comunicados';
 import Galeria from './pages/Galeria';
 import AdminDashboard from './pages/Admin';
+import AlbumDetalle from './pages/albumDetalle';
+import Chatbot from './pages/Chatbot';
 
 function App() {
   return (
@@ -23,9 +25,11 @@ function App() {
             <Route path="/admisiones" element={<Admisiones />} />
             <Route path="/comunicados" element={<Comunicados />} />
             <Route path="/galeria" element={<Galeria />} />
+            <Route path="/galeria/:id" element={<AlbumDetalle />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
+        <Chatbot />
         <Footer />
       </div>
     </Router>
