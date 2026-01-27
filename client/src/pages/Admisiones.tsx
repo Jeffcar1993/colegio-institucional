@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import API_BASE_URL from "@/config/api"
 
 const Admisiones = () => {
   // 1. Estado para los campos del formulario
@@ -28,7 +29,7 @@ const Admisiones = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/admisiones", {
+      const response = await fetch(`${API_BASE_URL}/api/admisiones`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

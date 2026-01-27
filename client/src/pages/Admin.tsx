@@ -7,6 +7,7 @@ import { Loader2, LogOut, Send, Trash2, Image as ImageIcon, Plus } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import API_BASE_URL from "@/config/api";
 
 // --- INTERFACES ---
 interface Admision {
@@ -71,10 +72,10 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const [resAdm, resMsg, resCom, resAlb] = await Promise.all([
-        fetch("http://localhost:5000/api/admisiones"),
-        fetch("http://localhost:5000/api/contacto"),
-        fetch("http://localhost:5000/api/comunicados"),
-        fetch("http://localhost:5000/api/albumes")
+        fetch(`${API_BASE_URL}/api/admisiones`),
+        fetch(`${API_BASE_URL}/api/contacto`),
+        fetch(`${API_BASE_URL}/api/comunicados`),
+        fetch(`${API_BASE_URL}/api/albumes`)
       ]);
       
       const dataAdm = await resAdm.json();
@@ -96,7 +97,7 @@ export default function AdminDashboard() {
   const eliminarElemento = async (tipo: string, id: number) => {
     if (!confirm("¿Estás seguro de que deseas eliminar este registro?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/${tipo}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/api/${tipo}/${id}`, { method: 'DELETE' });
       if (res.ok) fetchData();
     } catch {
       alert("No se pudo eliminar");
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
         const tienPortada = albumActual?.portada_url && albumActual.portada_url.trim() !== "";
         
         // Agregar la foto al álbum
-        const resFoto = await fetch(`http://localhost:5000/api/albumes/${albumId}/fotos`, {
+        const resFoto = await fetch(`${API_BASE_URL}/api/albumes/${albumId}/fotos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url: result.info.secure_url })
@@ -139,7 +140,7 @@ export default function AdminDashboard() {
         
         // Si no tiene portada, establecer esta foto como portada
         if (resFoto.ok && !tienPortada) {
-          await fetch(`http://localhost:5000/api/albumes/${albumId}`, {
+          await fetch(`${API_BASE_URL}/api/albumes/${albumId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ portada_url: result.info.secure_url })
@@ -156,7 +157,7 @@ export default function AdminDashboard() {
     if (!nuevoAlbum.titulo) return alert("Ponle un nombre al álbum");
     setCreadoAlbum(true);
     try {
-      const res = await fetch("http://localhost:5000/api/albumes", {
+      const res = await fetch(`${API_BASE_URL}/api/albumes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(nuevoAlbum),
@@ -189,7 +190,7 @@ export default function AdminDashboard() {
     e.preventDefault();
     setPublicando(true);
     try {
-      const res = await fetch("http://localhost:5000/api/comunicados", {
+      const res = await fetch(`${API_BASE_URL}/api/comunicados`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(nuevoComunicado),

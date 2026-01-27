@@ -8,8 +8,9 @@ import Footer from './layout/Footer';
 import Comunicados from './pages/Comunicados';
 import Galeria from './pages/Galeria';
 import AdminDashboard from './pages/Admin';
-import AlbumDetalle from './pages/albumDetalle';
+
 import Chatbot from './pages/Chatbot';
+import AlbumDetalle from './pages/AlbumDetalle';
 
 function App() {
   return (

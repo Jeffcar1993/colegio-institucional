@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, MapPin, Clock, Mail } from "lucide-react";
+import API_BASE_URL from "@/config/api";
 
 const Contacto = () => {
   // 2. Definimos el estado para los datos del formulario
@@ -29,7 +30,7 @@ const Contacto = () => {
     setEnviando(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/contacto", {
+      const response = await fetch(`${API_BASE_URL}/api/contacto`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

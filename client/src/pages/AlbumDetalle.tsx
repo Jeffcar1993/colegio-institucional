@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import API_BASE_URL from "@/config/api";
 
 interface Foto {
   id: number;
@@ -17,7 +18,7 @@ const AlbumDetalle = () => {
   useEffect(() => {
     const cargarFotos = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/albumes/${id}/fotos`);
+        const res = await fetch(`${API_BASE_URL}/api/albumes/${id}/fotos`);
         const data = await res.json();
         setFotos(data);
       } catch (error) {

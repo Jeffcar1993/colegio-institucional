@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Image as ImageIcon, Calendar, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "@/config/api";
 
 interface Album {
   id: number;
@@ -20,7 +21,7 @@ const Galeria = () => {
   useEffect(() => {
     const fetchAlbumes = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/albumes");
+        const res = await fetch(`${API_BASE_URL}/api/albumes`);
         const data = await res.json();
         setAlbumes(data);
       } catch (error) {

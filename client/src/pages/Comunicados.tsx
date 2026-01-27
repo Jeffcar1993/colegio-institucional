@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bell, Calendar, ChevronRight, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import API_BASE_URL from "@/config/api";
 import { 
   Dialog, 
   DialogContent, 
@@ -29,7 +30,7 @@ export default function Comunicados() {
   useEffect(() => {
     const fetchComunicados = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/comunicados");
+        const response = await fetch(`${API_BASE_URL}/api/comunicados`);
         const data = await response.json();
         const sortedData = data.sort((a: Comunicado, b: Comunicado) => 
           new Date(b.fecha_creacion).getTime() - new Date(a.fecha_creacion).getTime()

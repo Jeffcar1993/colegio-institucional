@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import API_BASE_URL from "@/config/api";
 
 // --- INTERFACES ---
 interface ResultadoBusqueda {
@@ -72,7 +73,7 @@ const Chatbot = () => {
 
     // 2. Búsqueda en API
     try {
-      const res = await fetch(`http://localhost:5000/api/chatbot/buscar?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`${API_BASE_URL}/api/chatbot/buscar?q=${encodeURIComponent(q)}`);
       const resultados: ResultadoBusqueda[] = await res.json();
       
       if (resultados.length > 0) {
