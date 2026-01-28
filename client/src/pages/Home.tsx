@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Users, BookOpen, Award } from "lucide-react";
+import { GraduationCap, Users, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Carousel,
@@ -33,7 +33,7 @@ const Home = () => {
 
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tighter">
-            Liderazgo y Excelencia desde 1890
+            Liderazgo y Excelencia desde 1972
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-slate-200 font-light">
             Formando a las futuras generaciones de San Pedro de Jagua con valores, ciencia y cultura.
@@ -85,17 +85,16 @@ const Home = () => {
             <h2 className="text-4xl font-bold text-slate-900">¿Por qué elegir el IED Kennedy?</h2>
             <div className="h-1 w-20 bg-green-600 mx-auto mt-4" />
           </div>
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               { icon: <GraduationCap size={40}/>, title: "Calidad Académica", desc: "Altos estándares evaluativos y preparación para el ICFES." },
               { icon: <Users size={40}/>, title: "Comunidad Unida", desc: "Acompañamiento cercano entre docentes, padres y alumnos." },
-              { icon: <BookOpen size={40}/>, title: "Bilingüismo", desc: "Programa de inglés intensivo desde primaria." },
-              { icon: <Award size={40}/>, title: "Formación en Valores", desc: "Educación basada en el respeto, la ética y la fe." },
+              { icon: <Award size={40}/>, title: "Formación en Valores", desc: "Educación basada en el respeto y la ética." },
             ].map((item, i) => (
-              <div key={i} className="text-center p-6 space-y-4 hover:scale-105 transition-transform cursor-default">
+              <div key={i} className="text-center p-6 space-y-4 hover:scale-105 transition-transform cursor-default bg-white rounded-2xl shadow-sm border border-slate-100 md:border-none md:shadow-none">
                 <div className="text-green-700 flex justify-center">{item.icon}</div>
                 <h3 className="text-xl font-bold text-slate-800">{item.title}</h3>
-                <p className="text-slate-600">{item.desc}</p>
+                <p className="text-slate-600 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>

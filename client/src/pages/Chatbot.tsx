@@ -42,7 +42,7 @@ const Chatbot = () => {
   const sugerencias = [
     { texto: "Manual de convivencia", emoji: "📖" },
     { texto: "Horarios", emoji: "🕐" },
-    { texto: "Galería de fotos", emoji: "🖼️" },
+    { texto: "Galería", emoji: "🖼️" },
     { texto: "Admisiones", emoji: "🎓" },
   ];
 
@@ -106,21 +106,38 @@ const Chatbot = () => {
   };
 
   const manejarNavegacion = (res: ResultadoBusqueda) => {
-  console.log("Navegando a:", res); // Para que veas en consola qué está fallando
+  console.log("Intentando navegar a:", res);
 
-  // 1. Si es un documento PDF o enlace externo
-  if (res.url && (res.url.endsWith('.pdf') || res.url.startsWith('http'))) {
-    window.open(res.url, "_blank");
+  // 1. Prioridad: Documentos PDF (abrir en pestaña nueva)
+  if (res.es_documento || (res.url && res.url.toLowerCase().endsWith('.pdf'))) {
+    const pdfUrl = res.url?.startsWith('http') ? res.url : `${window.location.origin}${res.url}`;
+    window.open(pdfUrl, "_blank");
     return;
   }
 
-  // 2. Si es una sección interna del sitio
-  if (res.url && res.url.startsWith('/')) {
+  // 2. Lógica Inteligente de Fallback (Si la URL es null o incorrecta)
+  let rutaDestino = res.url;
+
+  if (!rutaDestino || rutaDestino === "null") {
+    const titulo = res.titulo.toLowerCase();
+    if (titulo.includes("galería") || titulo.includes("foto")) rutaDestino = "/galeria";
+    else if (titulo.includes("comunicado") || res.tipo === "comunicado") rutaDestino = "/comunicados";
+    else if (titulo.includes("admisión") || titulo.includes("matrícula")) rutaDestino = "/admisiones";
+    else if (titulo.includes("contacto")) rutaDestino = "/contacto";
+    else if (titulo.includes("cronograma") || titulo.includes("actividades")) rutaDestino = "/nosotros";
+  }
+
+  // 3. Ejecutar Navegación
+  if (rutaDestino && rutaDestino.startsWith('/')) {
     setIsOpen(false);
-    navigate(res.url); // Usa el router de React para no recargar la web
+    navigate(rutaDestino);
+  } else if (rutaDestino && rutaDestino.startsWith('http')) {
+    window.open(rutaDestino, "_blank");
   } else {
-    // Caso de emergencia: si la URL viene mal del backend
-    console.error("Ruta no válida detectada:", res.url);
+    // Si llegamos aquí, mandamos a inicio para no romper la app
+    console.warn("Ruta no identificada, redirigiendo a home");
+    navigate('/');
+    setIsOpen(false);
   }
 };
 

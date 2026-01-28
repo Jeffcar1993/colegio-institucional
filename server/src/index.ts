@@ -19,17 +19,17 @@ const normalizarTexto = (texto: string): string => {
     .trim();
 };
 
-// --- 2. DATA INDEXABLE ---
+// --- 2. DATA INDEXABLE (Secciones fijas para el Chatbot) ---
 const contenidoIndexable = [
   { pagina: 'home', ruta: '/', titulo: 'Inicio', palabras_clave: ['inicio', 'home', 'principal'], descripcion: 'Página principal' },
   { pagina: 'nosotros', ruta: '/nosotros', titulo: 'Institución', palabras_clave: ['mision', 'vision', 'nosotros', 'manual', 'pei'], descripcion: 'Información institucional' },
-  { pagina: 'comunicados', ruta: '/comunicados', titulo: 'Comunicados', palabras_clave: ['circulares', 'noticias', 'avisos'], descripcion: 'Últimas noticias' },
-  { pagina: 'galeria', ruta: '/galeria', titulo: 'Galería', palabras_clave: ['fotos', 'imagenes', 'albumes'], descripcion: 'Galería fotográfica' },
-  { pagina: 'admisiones', ruta: '/admisiones', titulo: 'Admisiones', palabras_clave: ['matricula', 'inscripcion', 'cupos'], descripcion: 'Proceso de admisión' },
-  { pagina: 'contacto', ruta: '/contacto', titulo: 'Contacto', palabras_clave: ['telefono', 'ubicacion', 'mensaje'], descripcion: 'Contacto y secretaría' }
+  { pagina: 'comunicados', ruta: '/comunicados', titulo: 'Comunicados', palabras_clave: ['circulares', 'noticias', 'avisos'], descripcion: 'Últimas noticias y circulares' },
+  { pagina: 'galeria', ruta: '/galeria', titulo: 'Galería', palabras_clave: ['fotos', 'imagenes', 'albumes', 'eventos'], descripcion: 'Galería fotográfica y recuerdos' },
+  { pagina: 'admisiones', ruta: '/admisiones', titulo: 'Admisiones', palabras_clave: ['matricula', 'inscripcion', 'cupos', 'costos'], descripcion: 'Proceso de admisión 2026' },
+  { pagina: 'contacto', ruta: '/contacto', titulo: 'Contacto', palabras_clave: ['telefono', 'ubicacion', 'mensaje', 'correo'], descripcion: 'Contacto y atención a padres' }
 ];
 
-// --- 3. RUTAS DE COMUNICADOS (Lectura, Escritura, Borrado) ---
+// --- 3. RUTAS DE COMUNICADOS ---
 app.get('/api/comunicados', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM comunicados ORDER BY fecha_creacion DESC');
@@ -97,7 +97,7 @@ app.post('/api/albumes/:id/fotos', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error al guardar foto" }); }
 });
 
-// --- 5. RUTAS DE ADMISIONES (Panel y Formulario) ---
+// --- 5. RUTAS DE ADMISIONES ---
 app.get('/api/admisiones', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM admisiones ORDER BY fecha_solicitud DESC');
@@ -108,7 +108,10 @@ app.get('/api/admisiones', async (req, res) => {
 app.post('/api/admisiones', async (req, res) => {
   const { nombre_acudiente, correo, grado_postula, mensaje } = req.body;
   try {
-    const result = await pool.query("INSERT INTO admisiones (nombre_acudiente, correo, grado_postula, mensaje) VALUES ($1, $2, $3, $4) RETURNING *", [nombre_acudiente, correo, grado_postula, mensaje]);
+    const result = await pool.query(
+      "INSERT INTO admisiones (nombre_acudiente, correo, grado_postula, mensaje) VALUES ($1, $2, $3, $4) RETURNING *", 
+      [nombre_acudiente, correo, grado_postula, mensaje]
+    );
     res.status(201).json(result.rows[0]);
   } catch (error) { res.status(500).json({ error: "Error" }); }
 });
@@ -120,7 +123,7 @@ app.delete('/api/admisiones/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error al eliminar" }); }
 });
 
-// --- 6. RUTAS DE CONTACTO (Panel y Formulario) ---
+// --- 6. RUTAS DE CONTACTO ---
 app.get('/api/contacto', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM mensajes_contacto ORDER BY fecha_envio DESC');
@@ -131,7 +134,10 @@ app.get('/api/contacto', async (req, res) => {
 app.post('/api/contacto', async (req, res) => {
   const { nombre, correo, asunto, mensaje } = req.body;
   try {
-    const result = await pool.query("INSERT INTO mensajes_contacto (nombre, correo, asunto, mensaje) VALUES ($1, $2, $3, $4) RETURNING *", [nombre, correo, asunto, mensaje]);
+    const result = await pool.query(
+      "INSERT INTO mensajes_contacto (nombre, correo, asunto, mensaje) VALUES ($1, $2, $3, $4) RETURNING *", 
+      [nombre, correo, asunto, mensaje]
+    );
     res.status(201).json(result.rows[0]);
   } catch (error) { res.status(500).json({ error: "Error" }); }
 });
@@ -143,28 +149,73 @@ app.delete('/api/contacto/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error al eliminar" }); }
 });
 
-// --- 7. BUSCADOR CHATBOT ---
-app.get('/api/chatbot/buscar', async (req, res) => {
+// --- 7. BUSCADOR CHATBOT UNIFICADO ---
+app.get('/api/chatbot/buscar', async (req: Request, res: Response) => {
   const { q } = req.query;
-  if (!q || typeof q !== 'string') return res.status(400).json([]);
+  
+  if (!q || typeof q !== 'string') {
+    return res.json([]);
+  }
+
   const queryLimpio = normalizarTexto(q);
-  const sqlQuery = `%${q.toLowerCase()}%`;
+  const dbTerm = `%${queryLimpio}%`;
+
   try {
-    const comunicados = await pool.query(
-      `SELECT 'comunicado' as tipo, id, titulo, resumen as descripcion, adjunto_url as url, fecha_creacion as fecha 
-       FROM comunicados WHERE LOWER(titulo) ILIKE $1 OR LOWER(resumen) ILIKE $1 LIMIT 5`, [sqlQuery]
+    // A. Buscar en Secciones del Sitio (Fijas)
+    const paginas = contenidoIndexable
+      .filter(item => 
+        normalizarTexto(item.titulo).includes(queryLimpio) || 
+        item.palabras_clave.some(kw => normalizarTexto(kw).includes(queryLimpio))
+      )
+      .map(item => ({ 
+        id: item.pagina, 
+        tipo: 'pagina', 
+        titulo: item.titulo, 
+        descripcion: item.descripcion, 
+        url: item.ruta 
+      }));
+
+    // B. Buscar Documentos Institucionales
+    const docsRef: Record<string, string> = { 
+      'manual': 'manual-convivencia.pdf', 
+      'horario': 'horarios.pdf', 
+      'pei': 'pei.pdf', 
+      'cronograma': 'cronograma.pdf'
+    };
+    
+    let documentos = [];
+    for (let key in docsRef) {
+      if (queryLimpio.includes(key)) {
+        documentos.push({
+          id: key,
+          tipo: 'institucional',
+          titulo: `Documento ${key.toUpperCase()}`,
+          descripcion: `Consultar archivo oficial de ${key}`,
+          url: `/docs/${docsRef[key]}`,
+          es_documento: true
+        });
+      }
+    }
+
+    // C. Buscar en la Base de Datos (Comunicados)
+    const dbRes = await pool.query(
+      `SELECT id, titulo, resumen as descripcion, '/comunicados' as url, 'comunicado' as tipo 
+       FROM comunicados 
+       WHERE LOWER(titulo) ILIKE $1 OR LOWER(resumen) ILIKE $1 
+       LIMIT 3`, [dbTerm]
     );
-    const paginas = contenidoIndexable.filter(item => 
-      normalizarTexto(item.titulo).includes(queryLimpio) || 
-      item.palabras_clave.some(kw => normalizarTexto(kw).includes(queryLimpio))
-    ).map(item => ({ tipo: 'pagina', id: item.pagina, titulo: item.titulo, descripcion: item.descripcion, url: item.ruta, fecha: new Date().toISOString() }));
-    const docsRef: any = { 'manual': 'manual-convivencia.pdf', 'horario': 'horarios.pdf', 'mision': 'mision.pdf' };
-    let docs = [];
-    for (let key in docsRef) { if (queryLimpio.includes(key)) { docs.push({ tipo: 'institucional', id: key, titulo: `Documento ${key.toUpperCase()}`, url: `/docs/${docsRef[key]}`, es_documento: true }); } }
-    res.json([...paginas, ...docs, ...comunicados.rows]);
-  } catch (err) { res.status(500).json([]); }
+
+    // Combinar y enviar
+    res.json([...paginas, ...documentos, ...dbRes.rows]);
+
+  } catch (error) {
+    console.error("Error en búsqueda:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
 });
 
-// --- INICIO ---
+// --- 8. INICIO DEL SERVIDOR ---
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Servidor listo en puerto ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor listo en puerto ${PORT}`);
+});

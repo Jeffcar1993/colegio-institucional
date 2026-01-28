@@ -28,14 +28,16 @@ const Nosotros = () => {
         <div className="bg-white p-8 rounded-2xl shadow-sm border-l-4 border-green-600 space-y-3">
           <h2 className="text-2xl font-bold text-green-800">Misión</h2>
           <p className="text-slate-600 leading-relaxed">
-            Formar personas integrales con valores cristianos, preparadas para enfrentar los retos del siglo XXI, fomentando el liderazgo y la ética en cada estudiante.
+            La Institución Educativa Rural Departamental Kennedy, forma a los estudiantes integralmente con una sólida estructura en valores humanos, conocimiento científico, competencias ciudadanas, democráticas, de emprendimiento creativo y laborales. En un proceso de integración con instituciones de educación superior y organizaciones no gubernamentales. 
+            Todo lo anterior enmarcado en un contexto rural bajo las premisas de producción agropecuaria y prácticas ecoturísticas, que conlleven al estudiante empoderado, a ser parte activa de la comunidad, ejerciendo las capacidades y conocimientos construidos en su proceso de formación. 
           </p>
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border-l-4 border-blue-900 space-y-3">
           <h2 className="text-2xl font-bold text-blue-900">Visión</h2>
           <p className="text-slate-600 leading-relaxed">
-            Ser una institución educativa líder en la región, reconocida por su excelencia académica, compromiso social y la implementación de tecnologías innovadoras.
+            La Institución Educativa Rural Departamental Kennedy, en el año 2030, deberá ser una institución modelo regional, provincial, departamental y nacional, líder en los procesos de formación estudiantil en las modalidades agropecuaria y ecoturística, con un alto componente en formación en valores y formación científica. 
+            Será una institución formadora de estudiantes con gran capacidad de pensamiento crítico, creativo y transformador.
           </p>
         </div>
       </section>

@@ -11,6 +11,8 @@ import AdminDashboard from './pages/Admin';
 
 import Chatbot from './pages/Chatbot';
 import AlbumDetalle from './pages/AlbumDetalle';
+import Uniformes from './pages/Uniformes';
+import Sedes from './pages/Sedes';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/nosotros" element={<Nosotros />} />
+            <Route path="/uniformes" element={<Uniformes />} />
+            <Route path="/sedes" element={<Sedes />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/admisiones" element={<Admisiones />} />
             <Route path="/comunicados" element={<Comunicados />} />

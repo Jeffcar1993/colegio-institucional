@@ -83,7 +83,7 @@ const Contacto = () => {
               <Mail className="text-slate-700 shrink-0" />
               <div>
                 <h4 className="font-bold text-slate-900">Correos</h4>
-                <p className="text-sm text-slate-700">info@ejemplo.com<br/>secretaria@ejemplo.com</p>
+                <p className="text-sm text-slate-700">iedkennedy_rector@secundinamarca.edu.co<br/>Iedkennedy_pagaduria@secundinamarca.edu.co</p>
               </div>
             </CardContent>
           </Card>
@@ -92,7 +92,7 @@ const Contacto = () => {
               <Phone className="text-slate-700 shrink-0" />
               <div>
                 <h4 className="font-bold text-slate-900">Teléfonos</h4>
-                <p className="text-sm text-slate-700">+57 (123) 456 7890<br/>Secretaría: Ext. 101</p>
+                <p className="text-sm text-slate-700">+573165454433<br/>+573112636245 </p>
               </div>
             </CardContent>
           </Card>
