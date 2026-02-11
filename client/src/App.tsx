@@ -13,6 +13,8 @@ import Chatbot from './pages/Chatbot';
 import AlbumDetalle from './pages/AlbumDetalle';
 import Uniformes from './pages/Uniformes';
 import Sedes from './pages/Sedes';
+import DocumentosInstitucionales from './pages/DocumentosInstitucionales';
+import SimbolosInstitucionales from './pages/SimbolosInstitucionales';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/uniformes" element={<Uniformes />} />
             <Route path="/sedes" element={<Sedes />} />
+            <Route path="/documentos-institucionales" element={<DocumentosInstitucionales />} />
+            <Route path="/simbolos-institucionales" element={<SimbolosInstitucionales />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/admisiones" element={<Admisiones />} />
             <Route path="/comunicados" element={<Comunicados />} />

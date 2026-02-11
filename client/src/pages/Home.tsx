@@ -36,7 +36,7 @@ const Home = () => {
             Liderazgo y Excelencia desde 1972
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-slate-200 font-light">
-            Formando a las futuras generaciones de San Pedro de Jagua con valores, ciencia y cultura.
+            Formando seres críticos para un desarrollo integral.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6 shadow-lg shadow-green-900/20">
@@ -82,7 +82,7 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900">¿Por qué elegir el IED Kennedy?</h2>
+            <h2 className="text-4xl font-bold text-slate-900">¿Por qué elegir la IED Kennedy?</h2>
             <div className="h-1 w-20 bg-green-600 mx-auto mt-4" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">

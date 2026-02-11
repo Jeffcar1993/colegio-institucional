@@ -96,6 +96,16 @@ const Contacto = () => {
               </div>
             </CardContent>
           </Card>
+          <Card className="border-none shadow-none bg-amber-50">
+            <CardContent className="p-6">
+              <h4 className="font-bold text-amber-900 mb-3">Información Institucional</h4>
+              <div className="space-y-2 text-sm text-slate-700">
+                <p><span className="font-semibold">Código DANE:</span> 225839000911</p>
+                <p><span className="font-semibold">NIT:</span> 832004852-5</p>
+                <p><span className="font-semibold">Código ICFES:</span> 059956</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* FORMULARIO - Conectado a la lógica */}

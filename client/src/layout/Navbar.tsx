@@ -37,7 +37,7 @@ const Navbar = () => {
 
               {/* Submenú Flotante */}
               {isDropdownOpen && (
-                <div className="absolute left-0 top-full w-48 pt-2 animate-in fade-in slide-in-from-top-2">
+                <div className="absolute left-0 top-full w-56 pt-2 animate-in fade-in slide-in-from-top-2">
                   {/* El div de arriba es un puente invisible, este de abajo es el menú real */}
                   <div className="bg-white border border-gray-100 shadow-xl rounded-xl py-2 overflow-hidden">
                     <Link 
@@ -45,14 +45,28 @@ const Navbar = () => {
                       onClick={() => setIsDropdownOpen(false)}
                       className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
                     >
-                      Uniformes 2026
+                      Uniformes
                     </Link>
                     <Link 
                       to="/sedes" 
                       onClick={() => setIsDropdownOpen(false)}
                       className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
                     >
-                      Sedes del Colegio
+                      Sedes
+                    </Link>
+                    <Link 
+                      to="/documentos-institucionales" 
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                    >
+                      Documentos Institucionales
+                    </Link>
+                    <Link 
+                      to="/simbolos-institucionales" 
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                    >
+                      Símbolos Institucionales
                     </Link>
                   </div>
                 </div>
@@ -90,8 +104,10 @@ const Navbar = () => {
             </div>
             {isDropdownOpen && (
               <div className="pl-6 space-y-1 bg-slate-50 rounded-lg">
-                <Link to="/uniformes" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm text-gray-600">Uniformes 2026</Link>
-                <Link to="/sedes" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm text-gray-600">Sedes del Colegio</Link>
+                <Link to="/uniformes" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm text-gray-600">Uniformes</Link>
+                <Link to="/sedes" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm text-gray-600">Sedes</Link>
+                <Link to="/documentos-institucionales" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm text-gray-600">Documentos Institucionales</Link>
+                <Link to="/simbolos-institucionales" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm text-gray-600">Símbolos Institucionales</Link>
               </div>
             )}
           </div>

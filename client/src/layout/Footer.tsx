@@ -18,8 +18,13 @@ const Footer = () => {
               <span className="font-bold text-white text-xl tracking-tight">IED KENNEDY</span>
             </div>
             <p className="text-sm leading-relaxed max-w-xs">
-              Formando líderes con valores y excelencia académica en San Pedro de Jagua desde 1972.
+              Formando seres críticos para un desarrollo integral.
             </p>
+            <div className="text-xs space-y-1 text-slate-400">
+              <p><span className="font-semibold">Código DANE:</span> 225839000911</p>
+              <p><span className="font-semibold">NIT:</span> 832004852-5</p>
+              <p><span className="font-semibold">Código ICFES:</span> 059956</p>
+            </div>
           </div>
 
           {/* Columna 2: Enlaces Rápidos */}
