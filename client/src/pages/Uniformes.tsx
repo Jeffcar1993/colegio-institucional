@@ -10,7 +10,7 @@ const Uniformes = () => {
     <div className="min-h-screen bg-white pb-12">
       <div className="bg-green-800 text-white py-16 px-6 text-center">
         <h1 className="text-3xl md:text-4xl font-bold">Uniformes Institucionales</h1>
-        <p className="mt-2 text-green-100">Identidad y respeto por nuestra institución</p>
+        <p className="mt-2 text-green-100">Identidad y respeto por nuestra institución.</p>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 -mt-8 space-y-12">
