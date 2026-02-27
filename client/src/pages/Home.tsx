@@ -14,7 +14,7 @@ import React from "react";
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel = [
   { id: 1, url: "/img/banner1.png", alt: "Bienvenida Año Escolar 2026" },
-  { id: 2, url: "/img/banner2.png", alt: "Jornada de Matrículas Abiertas" },
+  { id: 2, url: "/img/banner2.jpg", alt: "Jornada de elecciones" },
 ];
 
 const Home = () => {
@@ -56,21 +56,38 @@ const Home = () => {
             onMouseLeave={plugin.current.reset}
           >
             <CarouselContent>
-              {imagenesCarrusel.map((imagen) => (
-                <CarouselItem key={imagen.id}>
+              {imagenesCarrusel.map((imagen) => {
+                // Si es banner2.jpg, hacer clic para ir a la galería de elección y reducir tamaño
+                const isEleccionBanner = imagen.url === "/img/banner2.jpg";
+                const bannerContent = (
                   <div className="relative aspect-[16/9] md:aspect-[21/7]">
                     <img
                       src={imagen.url}
                       alt={imagen.alt}
-                      className="object-cover w-full h-full"
+                      className={isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
                     />
                     {/* Overlay informativo sobre la imagen */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 text-white">
-                      <h3 className="text-xl md:text-2xl font-bold">{imagen.alt}</h3>
+                    <div className={
+                      isEleccionBanner
+                        ? "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8 text-white"
+                        : "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 text-white"
+                    }>
+                      <h3 className="text-xl md:text-2xl font-bold drop-shadow-lg">{imagen.alt}</h3>
                     </div>
                   </div>
-                </CarouselItem>
-              ))}
+                );
+                return (
+                  <CarouselItem key={imagen.id}>
+                    {isEleccionBanner ? (
+                      <Link to="/galeria?evento=eleccion-personero-contralor-2026">
+                        {bannerContent}
+                      </Link>
+                    ) : (
+                      bannerContent
+                    )}
+                  </CarouselItem>
+                );
+              })}
             </CarouselContent>
             <CarouselPrevious className="hidden md:flex left-4" />
             <CarouselNext className="hidden md:flex right-4" />
