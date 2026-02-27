@@ -127,26 +127,13 @@ export default function AdminDashboard() {
         language: 'es',
       }, async (error: object | null, result: CloudinaryResult | undefined) => {
       if (!error && result && result.event === "success" && result.info?.secure_url) {
-        // Obtener el álbum para verificar si tiene portada
-        const albumActual = albumes.find(a => a.id === albumId);
-        const tienPortada = albumActual?.portada_url && albumActual.portada_url.trim() !== "";
-        
         // Agregar la foto al álbum
-        const resFoto = await fetch(`${API_BASE_URL}/api/albumes/${albumId}/fotos`, {
+        await fetch(`${API_BASE_URL}/api/albumes/${albumId}/fotos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url: result.info.secure_url })
         });
-        
-        // Si no tiene portada, establecer esta foto como portada
-        if (resFoto.ok && !tienPortada) {
-          await fetch(`${API_BASE_URL}/api/albumes/${albumId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ portada_url: result.info.secure_url })
-          });
-        }
-        
+
         fetchData();
       }
     });

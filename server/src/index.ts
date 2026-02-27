@@ -59,9 +59,33 @@ app.delete('/api/comunicados/:id', async (req, res) => {
 app.get('/api/albumes', async (req, res) => {
   try {
     const query = `
-      SELECT a.*, COUNT(f.id) as cantidad_fotos 
-      FROM albumes a LEFT JOIN fotos f ON a.id = f.album_id 
-      GROUP BY a.id ORDER BY a.fecha_creacion DESC`;
+      SELECT
+        a.id,
+        a.titulo,
+        a.fecha_creacion,
+        CASE
+          WHEN a.portada_url IS NOT NULL
+            AND BTRIM(a.portada_url) <> ''
+            AND EXISTS (
+              SELECT 1
+              FROM fotos fp
+              WHERE fp.album_id = a.id
+                AND fp.url = a.portada_url
+            )
+          THEN a.portada_url
+          ELSE (
+            SELECT f1.url
+            FROM fotos f1
+            WHERE f1.album_id = a.id
+            ORDER BY f1.id ASC
+            LIMIT 1
+          )
+        END AS portada_url,
+        COUNT(f.id) AS cantidad_fotos
+      FROM albumes a
+      LEFT JOIN fotos f ON a.id = f.album_id
+      GROUP BY a.id
+      ORDER BY a.fecha_creacion DESC`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (error) { res.status(500).json({ error: "Error en galería" }); }
@@ -92,8 +116,38 @@ app.get('/api/albumes/:id/fotos', async (req, res) => {
 app.post('/api/albumes/:id/fotos', async (req, res) => {
   const { url } = req.body;
   try {
-    const result = await pool.query("INSERT INTO fotos (album_id, url) VALUES ($1, $2) RETURNING *", [req.params.id, url]);
-    res.json(result.rows[0]);
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      await client.query('SELECT id FROM albumes WHERE id = $1 FOR UPDATE', [req.params.id]);
+
+      const cantidadFotosPrevias = await client.query(
+        'SELECT COUNT(*)::int AS total FROM fotos WHERE album_id = $1',
+        [req.params.id]
+      );
+      const esPrimeraFoto = cantidadFotosPrevias.rows[0]?.total === 0;
+
+      const result = await client.query(
+        "INSERT INTO fotos (album_id, url) VALUES ($1, $2) RETURNING *",
+        [req.params.id, url]
+      );
+
+      if (esPrimeraFoto) {
+        await client.query(
+          'UPDATE albumes SET portada_url = $2 WHERE id = $1',
+          [req.params.id, url]
+        );
+      }
+
+      await client.query('COMMIT');
+      res.json(result.rows[0]);
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   } catch (error) { res.status(500).json({ error: "Error al guardar foto" }); }
 });
 
