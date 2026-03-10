@@ -13,7 +13,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel = [
-  { id: 1, url: "/img/banner1.png", alt: "Bienvenida Año Escolar 2026" },
+  { id: 1, url: "/img/dia_matemaatica.png", alt: "día de las matemáticas" },
   { id: 2, url: "/img/banner2.jpg", alt: "Jornada de elecciones" },
 ];
 
@@ -95,6 +95,41 @@ const Home = () => {
         </div>
       </section>
 
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Gobierno Escolar 2026</h2>
+            <div className="h-1 w-20 bg-green-600 mx-auto mt-4" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <article className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <img
+                src="/img/Juan.jpeg"
+                alt="Personero 2026 Juan Diego Urrego"
+                className="w-full h-44 sm:h-52 md:h-60 object-contain bg-slate-50"
+              />
+              <div className="p-6 text-center">
+                <p className="text-sm font-semibold text-green-700 uppercase tracking-wide">Personero 2026</p>
+                <h3 className="text-2xl font-bold text-slate-900 mt-2">Juan Diego Urrego</h3>
+              </div>
+            </article>
+
+            <article className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <img
+                src="/img/Danna.jpeg"
+                alt="Contralora 2026 Danna Michel Fonseca Sanchez"
+                className="w-full h-44 sm:h-52 md:h-60 object-contain bg-slate-50"
+              />
+              <div className="p-6 text-center">
+                <p className="text-sm font-semibold text-blue-700 uppercase tracking-wide">Contralora 2026</p>
+                <h3 className="text-2xl font-bold text-slate-900 mt-2">Danna Michel Fonseca Sanchez</h3>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* SECCIÓN PILARES */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -125,12 +160,12 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">13 FEB, 2026</p>
-                <h4 className="font-bold">Reunión General de Padres de Familia</h4>
+                <p className="text-sm text-green-700 font-bold">13 MAR, 2026</p>
+                <h4 className="font-bold">Día de las Matemáticas</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
-                <p className="text-sm text-blue-700 font-bold">12 MAR, 2026</p>
-                <h4 className="font-bold">Día de la Ciencia y la Innovación</h4>
+                <p className="text-sm text-blue-700 font-bold">22 MAR, 2026</p>
+                <h4 className="font-bold">Día del agua</h4>
               </div>
             </div>
           </div>
