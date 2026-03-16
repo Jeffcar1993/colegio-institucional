@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Loader2, LogOut, Send, Trash2, Image as ImageIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,14 +9,6 @@ import { Input } from "@/components/ui/input";
 import API_BASE_URL from "@/config/api";
 
 // --- INTERFACES ---
-interface Admision {
-  id: number;
-  nombre_acudiente: string;
-  correo: string;
-  grado_postula: string;
-  mensaje: string;
-  fecha_solicitud: string | null;
-}
 
 interface Mensaje {
   id: number;
@@ -45,7 +36,6 @@ interface Album {
 
 export default function AdminDashboard() {
   // --- ESTADOS ---
-  const [admisiones, setAdmisiones] = useState<Admision[]>([]);
   const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [comunicados, setComunicados] = useState<Comunicado[]>([]);
   const [albumes, setAlbumes] = useState<Album[]>([]);
@@ -71,19 +61,14 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [resAdm, resMsg, resCom, resAlb] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/admisiones`),
+      const [resMsg, resCom, resAlb] = await Promise.all([
         fetch(`${API_BASE_URL}/api/contacto`),
         fetch(`${API_BASE_URL}/api/comunicados`),
         fetch(`${API_BASE_URL}/api/albumes`)
       ]);
-      
-      const dataAdm = await resAdm.json();
       const dataMsg = await resMsg.json();
       const dataCom = await resCom.json();
       const dataAlb = await resAlb.json();
-
-      setAdmisiones(Array.isArray(dataAdm) ? dataAdm : []);
       setMensajes(Array.isArray(dataMsg) ? dataMsg : []);
       setComunicados(Array.isArray(dataCom) ? dataCom : []);
       setAlbumes(Array.isArray(dataAlb) ? dataAlb : []);
