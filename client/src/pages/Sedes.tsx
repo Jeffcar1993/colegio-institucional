@@ -1,5 +1,5 @@
 // src/pages/Sedes.tsx
-import { MapPin, Users, Clock } from 'lucide-react';
+import { MapPin, Clock } from 'lucide-react';
 
 const Sedes = () => {
   const sedes = [
