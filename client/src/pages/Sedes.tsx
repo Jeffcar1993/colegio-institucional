@@ -4,46 +4,28 @@ import { MapPin, Users, Clock } from 'lucide-react';
 const Sedes = () => {
   const sedes = [
     {
-      nombre: "Sede Principal (Bachillerato)",
-      direccion: "San Pedro de Jagua - Centro",
-      jornada: "Mañana y Tarde",
-      estudiantes: "600 aprox.",
-      imagen: "./img/sede-bachillerato.jpeg" // Imagen de ejemplo
+      nombre: "Sede Kennedy",
+      imagen: "/img/sede-bachillerato.jpeg"
     },
     {
-      nombre: "Sede General Santander (Primaria)",
-      direccion: "San Pedro de Jagua - Barrio General Santander",
-      jornada: "Mañana",
-      estudiantes: "350 aprox.",
-      imagen: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=500"
+      nombre: "Sede General Santander",
+      imagen: "/img/sede-bachillerato.jpeg"
     },
     {
-      nombre: "Sede La Romaza (Primaria)",
-      direccion: "San Pedro de Jagua - vereda La Romaza",
-      jornada: "Mañana",
-      estudiantes: "350 aprox.",
-      imagen: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=500"
+      nombre: "Sede Romaza",
+      imagen: "/img/romaza.jpeg"
     },
     {
-      nombre: "Sede Soya (Primaria)",
-      direccion: "San Pedro de Jagua - vereda Soya",
-      jornada: "Mañana",
-      estudiantes: "350 aprox.",
-      imagen: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=500"
+      nombre: "Sede Gazajujo",
+      imagen: "/img/gazajujo.png"
     },
     {
-      nombre: "Sede Gazajujo (Primaria)",
-      direccion: "San Pedro de Jagua - vereda Gazajujo",
-      jornada: "Mañana",
-      estudiantes: "350 aprox.",
-      imagen: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=500"
+      nombre: "Sede Soya",
+      imagen: "/img/soya.jpeg"
     },
     {
-      nombre: "Sede Gibraltar (Primaria)",
-      direccion: "San Pedro de Jagua - vereda Gibraltar",
-      jornada: "Mañana",
-      estudiantes: "350 aprox.",
-      imagen: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=500"
+      nombre: "Sede Gibraltar",
+      imagen: "/img/gibraltar.jpeg"
     }
   ];
 
@@ -64,15 +46,11 @@ const Sedes = () => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-slate-600">
                     <MapPin size={20} className="text-green-600" />
-                    <span>{sede.direccion}</span>
+                    <span>San Pedro de Jagua, Ubalá, Cundinamarca</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-600">
                     <Clock size={20} className="text-green-600" />
-                    <span>Jornada: {sede.jornada}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-slate-600">
-                    <Users size={20} className="text-green-600" />
-                    <span>Capacidad: {sede.estudiantes}</span>
+                    <span>Jornada única</span>
                   </div>
                 </div>
               </div>

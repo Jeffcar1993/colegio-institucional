@@ -73,13 +73,18 @@ const Navbar = () => {
               )}
             </div>
 
+            <Link to="/cronograma" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Cronograma</Link>
+            <Link to="/horarios" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Horarios</Link>
             <Link to="/contacto" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Contacto</Link>
             <Link to="/comunicados" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Comunicados</Link>
             <Link to="/galeria" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Galeria</Link>
-            
-            <Link to="/admisiones" className="bg-green-700 text-white px-5 py-2.5 rounded-full hover:bg-green-800 transition-all shadow-md text-sm font-bold">
-              Admisiones
+            <Link 
+              to="/blog" 
+              className="bg-gradient-to-r from-green-500 to-green-700 text-white font-bold rounded-full px-5 py-2 shadow-lg hover:scale-105 hover:from-green-600 hover:to-green-800 transition-all text-sm uppercase tracking-wide border border-green-600"
+            >
+              Blog
             </Link>
+            {/* Admisiones eliminado */}
           </div>
 
           {/* BOTÓN HAMBURGUESA MOBILE */}
@@ -112,12 +117,19 @@ const Navbar = () => {
             )}
           </div>
 
+          <Link to="/cronograma" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Cronograma</Link>
+          <Link to="/horarios" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Horarios</Link>
           <Link to="/contacto" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Contacto</Link>
           <Link to="/comunicados" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Comunicados</Link>
           <Link to="/galeria" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Galeria</Link>
-          <Link to="/admisiones" onClick={() => setIsOpen(false)} className="block w-full text-center bg-green-700 text-white py-3 rounded-xl font-bold mt-4">
-            Admisiones
+          <Link 
+            to="/blog" 
+            onClick={() => setIsOpen(false)} 
+            className="block px-3 py-2 font-bold bg-gradient-to-r from-green-500 to-green-700 text-white rounded-full shadow-lg border border-green-600 text-center hover:scale-105 transition-all"
+          >
+            Blog
           </Link>
+          {/* Admisiones eliminado */}
         </div>
       </div>
     </nav>

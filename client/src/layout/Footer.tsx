@@ -3,7 +3,7 @@ import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 import escudo from '../assets/escudo.jpeg';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  // currentYear eliminado, no se usa
 
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -32,9 +32,11 @@ const Footer = () => {
             <h3 className="text-white font-bold mb-5 uppercase text-xs tracking-widest">Institución</h3>
             <ul className="space-y-3 text-sm">
               <li><Link to="/nosotros" className="hover:text-green-500 transition-colors">Sobre nosotros</Link></li>
-              <li><Link to="/admisiones" className="hover:text-green-500 transition-colors">Admisiones 2026</Link></li>
-              <li><Link to="/nosotros" className="hover:text-green-500 transition-colors">Documentos Oficiales</Link></li>
+              <li><Link to="/documentos-institucionales" className="hover:text-green-500 transition-colors">Documentos Oficiales</Link></li>
               <li><Link to="/contacto" className="hover:text-green-500 transition-colors">Contacto</Link></li>
+              <li><Link to="/cronograma" className="hover:text-green-500 transition-colors">Cronograma</Link></li>
+              <li><Link to="/horarios" className="hover:text-green-500 transition-colors">Horarios</Link></li>
+              <li><Link to="/sedes" className="hover:text-green-500 transition-colors">Sedes</Link></li>
             </ul>
           </div>
 
@@ -44,7 +46,7 @@ const Footer = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
                 <MapPin size={18} className="text-green-500 shrink-0" />
-                <span>San Pedro de Jagua, Cundinamarca</span>
+                <span>San Pedro de Jagua, Ubalá, Cundinamarca</span>
               </li>
               <li className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
                 <Phone size={18} className="text-green-500 shrink-0" />
@@ -55,9 +57,9 @@ const Footer = () => {
               </li>
               <li className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
                 <Mail size={18} className="text-green-500 shrink-0" />
-                <div className="flex flex-col overflow-hidden break-words w-full">
-                  <span className="truncate hover:text-clip">iedkennedy_rector@secundinamarca.edu.co</span>
-                  <span className="truncate hover:text-clip">Iedkennedy_pagaduria@secundinamarca.edu.co</span>
+                <div className="flex flex-col w-full">
+                  <span className="break-all">iedkennedy_rector@secundinamarca.edu.co</span>
+                  <span className="break-all">Iedkennedy_pagaduria@secundinamarca.edu.co</span>
                 </div>
               </li>
             </ul>
@@ -83,7 +85,7 @@ const Footer = () => {
         {/* Línea Divisoria y Copyright */}
         <div className="border-t border-slate-800/50 mt-12 pt-8 text-center">
           <p className="text-slate-500 text-[10px] md:text-xs uppercase tracking-widest">
-            © {currentYear} IED Colegio Kennedy de San Pedro de Jagua.
+            Inspección de San Pedro de Jagua, Ubalá, Cundinamarca
           </p>
           <p className="text-slate-600 text-[9px] mt-1">Todos los derechos reservados.</p>
         </div>

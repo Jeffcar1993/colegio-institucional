@@ -78,13 +78,7 @@ const Home = () => {
                 );
                 return (
                   <CarouselItem key={imagen.id}>
-                    {isEleccionBanner ? (
-                      <Link to="/galeria?evento=eleccion-personero-contralor-2026">
-                        {bannerContent}
-                      </Link>
-                    ) : (
-                      bannerContent
-                    )}
+                    {bannerContent}
                   </CarouselItem>
                 );
               })}

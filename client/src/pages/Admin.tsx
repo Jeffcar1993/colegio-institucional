@@ -226,41 +226,12 @@ export default function AdminDashboard() {
         </Button>
       </div>
 
-      <Tabs defaultValue="admisiones">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
-          <TabsTrigger value="admisiones" className="cursor-pointer">Admisiones ({admisiones.length})</TabsTrigger>
+      <Tabs defaultValue="mensajes">
+        <TabsList className="grid w-full grid-cols-3 mb-8">
           <TabsTrigger value="mensajes" className="cursor-pointer">Mensajes ({mensajes.length})</TabsTrigger>
           <TabsTrigger value="publicar" className="cursor-pointer">📢 Comunicados</TabsTrigger>
           <TabsTrigger value="galeria" className="cursor-pointer">🖼️ Galería</TabsTrigger>
         </TabsList>
-
-        {/* CONTENIDO: ADMISIONES */}
-        <TabsContent value="admisiones">
-          <Card>
-            <CardContent className="pt-6">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Acudiente</TableHead>
-                    <TableHead>Grado</TableHead>
-                    <TableHead>Acción</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {admisiones.map((adm) => (
-                    <TableRow key={adm.id}>
-                      <TableCell className="font-medium">{adm.nombre_acudiente}<br/><span className="text-xs text-slate-500">{adm.correo}</span></TableCell>
-                      <TableCell><Badge>{adm.grado_postula}</Badge></TableCell>
-                      <TableCell>
-                        <Button variant="ghost" onClick={() => eliminarElemento('admisiones', adm.id)} className="text-red-500"><Trash2 className="h-4 w-4" /></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         {/* CONTENIDO: MENSAJES */}
         <TabsContent value="mensajes">
