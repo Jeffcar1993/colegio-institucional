@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Users, Award } from "lucide-react";
-import { Link } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -15,6 +14,7 @@ import React from "react";
 const imagenesCarrusel = [
   { id: 1, url: "/img/dia_matemaatica.png", alt: "día de las matemáticas" },
   { id: 2, url: "/img/banner2.jpg", alt: "Jornada de elecciones" },
+  { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"}
 ];
 
 const Home = () => {
@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <div className="flex flex-col w-full">
       {/* SECCIÓN HERO */}
-      <section className="relative h-[600px] flex items-center justify-center text-white overflow-hidden">
+      <section className="relative h-[400px] flex items-center justify-center text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-900 via-slate-900 to-blue-900">
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:32px_32px]"></div>
         </div>
@@ -38,11 +38,6 @@ const Home = () => {
           <p className="text-xl md:text-2xl mb-8 text-slate-200 font-light">
             Formando seres críticos para un desarrollo integral.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6 shadow-lg shadow-green-900/20">
-              <Link to="/admisiones">Inscripciones 2026</Link>
-            </Button>
-          </div>
         </div>
       </section>
 
