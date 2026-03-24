@@ -252,7 +252,7 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs defaultValue="mensajes">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 gap-2">
           <TabsTrigger value="mensajes" className="cursor-pointer">Mensajes ({mensajes.length})</TabsTrigger>
           <TabsTrigger value="publicar" className="cursor-pointer">📢 Comunicados</TabsTrigger>
           <TabsTrigger value="blog" className="cursor-pointer">✍️ Blog</TabsTrigger>
@@ -300,7 +300,7 @@ export default function AdminDashboard() {
                     <Input placeholder="Enlace Adjunto" value={nuevoComunicado.adjunto_url} onChange={(e) => setNuevoComunicado({...nuevoComunicado, adjunto_url: e.target.value})} />
                   </div>
                   <Textarea placeholder="Contenido..." value={nuevoComunicado.resumen} onChange={(e) => setNuevoComunicado({...nuevoComunicado, resumen: e.target.value})} required className="min-h-[300px]" />
-                  <Button type="submit" disabled={publicando} className="w-full bg-green-700">{publicando ? <Loader2 className="animate-spin" /> : "Publicar"}</Button>
+                  <Button type="submit" disabled={publicando} className="w-full bg-green-700 text-white font-bold">{publicando ? <Loader2 className="animate-spin" /> : "Publicar"}</Button>
                 </form>
               </CardContent>
             </Card>
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
                     <Input placeholder="URL de imagen de portada (opcional)" value={nuevoBlog.imagen_url} onChange={(e) => setNuevoBlog({...nuevoBlog, imagen_url: e.target.value})} />
                   </div>
                   <Textarea placeholder="Contenido de la entrada..." value={nuevoBlog.contenido} onChange={(e) => setNuevoBlog({...nuevoBlog, contenido: e.target.value})} required className="min-h-[300px]" />
-                  <Button type="submit" disabled={publicandoBlog} className="w-full bg-purple-700 hover:bg-purple-800">{publicandoBlog ? <Loader2 className="animate-spin" /> : "Publicar Entrada"}</Button>
+                  <Button type="submit" disabled={publicandoBlog} className="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold">{publicandoBlog ? <Loader2 className="animate-spin" /> : "Publicar Entrada"}</Button>
                 </form>
               </CardContent>
             </Card>
