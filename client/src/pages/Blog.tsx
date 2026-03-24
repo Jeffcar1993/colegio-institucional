@@ -109,8 +109,8 @@ export default function Blog() {
                     </Button>
                   </DialogTrigger>
 
-                  <DialogContent className="w-[95vw] sm:max-w-4xl h-[92vh] sm:h-[90vh] flex flex-col p-0 rounded-xl shadow-2xl overflow-hidden border-none">
-                    <DialogHeader className="p-6 pr-14 pb-4 border-b bg-slate-50 relative">
+                  <DialogContent className="w-[95vw] sm:max-w-4xl h-[90vh] sm:h-[88vh] flex flex-col p-0 rounded-xl shadow-2xl overflow-hidden border-none">
+                    <DialogHeader className="p-6 pr-14 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] sm:pt-6 border-b bg-slate-50 relative">
                       <div className="flex items-center gap-3 mb-2">
                         <Badge className="bg-green-600 text-white">{post.categoria || "Noticias"}</Badge>
                         <span className="text-xs text-slate-400 font-mono tracking-tighter">BLOG-ID: {post.id}</span>
