@@ -1,17 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Calendar, ChevronRight, FileText, Loader2, X } from "lucide-react";
+import { Bell, Calendar, ChevronRight, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import API_BASE_URL from "@/config/api";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
-  DialogDescription,
-  DialogClose
+  DialogDescription
 } from "@/components/ui/dialog";
 
 interface Comunicado {
@@ -101,15 +100,6 @@ export default function Comunicados() {
                   {/* AJUSTES DE VISIBILIDAD EN DIALOGCONTENT */}
                   <DialogContent className="w-[95vw] sm:max-w-5xl h-[92vh] sm:h-[90vh] flex flex-col p-0 rounded-xl shadow-2xl overflow-hidden border-none">
                     <DialogHeader className="p-6 pr-14 pb-4 border-b bg-slate-50 relative">
-                      <DialogClose asChild>
-                        <button
-                          type="button"
-                          aria-label="Cerrar comunicado"
-                          className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-100 hover:text-slate-900"
-                        >
-                          <X size={18} />
-                        </button>
-                      </DialogClose>
                       <div className="flex items-center gap-3 mb-2">
                         <Badge className="bg-green-600 text-white">{item.categoria}</Badge>
                         <span className="text-xs text-slate-400 font-mono tracking-tighter">REF-ID: {item.id}2026</span>
