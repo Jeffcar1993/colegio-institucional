@@ -4,7 +4,6 @@ import { FileText } from "lucide-react";
 const DocumentosInstitucionales = () => {
   const documentos = [
     { nombre: "Manual de Convivencia", url: "/docs/manual-convivencia.pdf" },
-    { nombre: "Horizonte institucional", url: "/docs/pei.pdf" },
     { nombre: "Resolución calendario Académico", url: "/docs/Resolución-calendario-academico.pdf" },
     { nombre: "Resolución asignación laboral y académica", url: "/docs/asignacion-laboral-y-academica.pdf" },
   ];

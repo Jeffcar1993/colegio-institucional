@@ -33,7 +33,7 @@ const Uniformes = () => {
                 alt="Uniforme de Diario Hombre 1" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Hombre</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme de diario masculino</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <img 
@@ -41,7 +41,7 @@ const Uniformes = () => {
                 alt="Uniforme de Diario Hombre 2" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Hombre</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme de diario masculino</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <img 
@@ -49,7 +49,7 @@ const Uniformes = () => {
                 alt="Uniforme de Diario Mujer 1" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Mujer</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme de diario femenino</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <img 
@@ -57,7 +57,7 @@ const Uniformes = () => {
                 alt="Uniforme de Diario Mujer 2" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Mujer</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme de diario femenino</p>
             </div>
           </div>
           {/* Especificaciones */}
@@ -66,11 +66,11 @@ const Uniformes = () => {
             <ul className="grid md:grid-cols-2 gap-3">
               <li className="flex items-center gap-2 text-sm text-slate-700">
                 <div className="h-1.5 w-1.5 bg-green-500 rounded-full" />
-                Jumper a cuadros (Niñas)
+                Jardinera a cuadros (Niñas)
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-700">
                 <div className="h-1.5 w-1.5 bg-green-500 rounded-full" />
-                Pantalón gris (Niños)
+                Pantalón negro (Niños)
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-700">
                 <div className="h-1.5 w-1.5 bg-green-500 rounded-full" />
@@ -98,7 +98,7 @@ const Uniformes = () => {
                 alt="Uniforme Educación Física 1" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Física 1</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme educación física</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <img 
@@ -106,7 +106,7 @@ const Uniformes = () => {
                 alt="Uniforme Educación Física 2" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Física 2</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme educación física</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <img 
@@ -114,7 +114,7 @@ const Uniformes = () => {
                 alt="Uniforme Educación Física 3" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Física 3</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme educación física</p>
             </div>
             <div className="bg-white rounded-xl p-4 shadow-md">
               <img 
@@ -122,7 +122,7 @@ const Uniformes = () => {
                 alt="Uniforme Educación Física 4" 
                 className="mx-auto h-[340px] w-auto object-contain rounded-lg mb-3"
               />
-              <p className="text-center text-sm font-semibold text-slate-700">Física 4</p>
+              <p className="text-center text-sm font-semibold text-slate-700">Uniforme educación física</p>
             </div>
           </div>
           {/* Especificaciones Educación Física debajo del grid */}

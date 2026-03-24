@@ -203,7 +203,33 @@ app.delete('/api/contacto/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error al eliminar" }); }
 });
 
-// --- 7. BUSCADOR CHATBOT UNIFICADO ---
+// --- 7. RUTAS DE BLOG ---
+app.get('/api/blog', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM blog ORDER BY fecha_creacion DESC');
+    res.json(result.rows);
+  } catch (error) { res.status(500).json({ error: "Error al obtener entradas del blog" }); }
+});
+
+app.post('/api/blog', async (req, res) => {
+  const { titulo, categoria, contenido, imagen_url } = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO blog (titulo, categoria, contenido, imagen_url) VALUES ($1, $2, $3, $4) RETURNING *",
+      [titulo, categoria, contenido, imagen_url || null]
+    );
+    res.json(result.rows[0]);
+  } catch (error) { res.status(500).json({ error: "Error al crear entrada" }); }
+});
+
+app.delete('/api/blog/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM blog WHERE id = $1', [req.params.id]);
+    res.json({ message: "Entrada eliminada" });
+  } catch (error) { res.status(500).json({ error: "Error al eliminar entrada" }); }
+});
+
+// --- 8. BUSCADOR CHATBOT UNIFICADO ---
 app.get('/api/chatbot/buscar', async (req: Request, res: Response) => {
   const { q } = req.query;
   

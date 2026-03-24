@@ -34,17 +34,35 @@ interface Album {
   cantidad_fotos?: number;
 }
 
+interface BlogPost {
+  id: number;
+  titulo: string;
+  categoria: string;
+  contenido: string;
+  imagen_url?: string;
+  fecha_creacion: string;
+}
+
 export default function AdminDashboard() {
   // --- ESTADOS ---
   const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [comunicados, setComunicados] = useState<Comunicado[]>([]);
   const [albumes, setAlbumes] = useState<Album[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   
   const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem("admin_session") === "true");
   const [password, setPassword] = useState("");
   const [publicando, setPublicando] = useState(false);
   const [loading, setLoading] = useState(false);
   const [creadoAlbum, setCreadoAlbum] = useState(false);
+
+  const [publicandoBlog, setPublicandoBlog] = useState(false);
+  const [nuevoBlog, setNuevoBlog] = useState({
+    titulo: "",
+    categoria: "Noticias",
+    contenido: "",
+    imagen_url: ""
+  });
 
   const [nuevoAlbum, setNuevoAlbum] = useState({ titulo: "" });
   const [nuevoComunicado, setNuevoComunicado] = useState({
@@ -61,17 +79,20 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [resMsg, resCom, resAlb] = await Promise.all([
+      const [resMsg, resCom, resAlb, resBlg] = await Promise.all([
         fetch(`${API_BASE_URL}/api/contacto`),
         fetch(`${API_BASE_URL}/api/comunicados`),
-        fetch(`${API_BASE_URL}/api/albumes`)
+        fetch(`${API_BASE_URL}/api/albumes`),
+        fetch(`${API_BASE_URL}/api/blog`)
       ]);
       const dataMsg = await resMsg.json();
       const dataCom = await resCom.json();
       const dataAlb = await resAlb.json();
+      const dataBlg = await resBlg.json();
       setMensajes(Array.isArray(dataMsg) ? dataMsg : []);
       setComunicados(Array.isArray(dataCom) ? dataCom : []);
       setAlbumes(Array.isArray(dataAlb) ? dataAlb : []);
+      setBlogs(Array.isArray(dataBlg) ? dataBlg : []);
     } catch {
       console.error("Error al conectar con la base de datos.");
     } finally {
@@ -177,6 +198,25 @@ export default function AdminDashboard() {
     }
   };
 
+  const handlePublicarBlog = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPublicandoBlog(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/blog`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevoBlog),
+      });
+      if (res.ok) {
+        setNuevoBlog({ titulo: "", categoria: "Noticias", contenido: "", imagen_url: "" });
+        fetchData();
+        alert("Entrada de blog publicada");
+      }
+    } finally {
+      setPublicandoBlog(false);
+    }
+  };
+
   useEffect(() => { if (isAuthenticated) fetchData(); }, [isAuthenticated]);
 
   if (!isAuthenticated) {
@@ -212,9 +252,10 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs defaultValue="mensajes">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
+        <TabsList className="grid w-full grid-cols-4 mb-8">
           <TabsTrigger value="mensajes" className="cursor-pointer">Mensajes ({mensajes.length})</TabsTrigger>
           <TabsTrigger value="publicar" className="cursor-pointer">📢 Comunicados</TabsTrigger>
+          <TabsTrigger value="blog" className="cursor-pointer">✍️ Blog</TabsTrigger>
           <TabsTrigger value="galeria" className="cursor-pointer">🖼️ Galería</TabsTrigger>
         </TabsList>
 
@@ -273,6 +314,36 @@ export default function AdminDashboard() {
                 ))}
             </Card>
            </div>
+        </TabsContent>
+
+        {/* CONTENIDO: BLOG */}
+        <TabsContent value="blog">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <Card className="xl:col-span-2 shadow-md border-t-4 border-t-purple-600">
+              <CardHeader><CardTitle className="flex items-center gap-2"><Send className="h-5 w-5" /> Nueva Entrada</CardTitle></CardHeader>
+              <CardContent>
+                <form onSubmit={handlePublicarBlog} className="space-y-4">
+                  <Input placeholder="Título" value={nuevoBlog.titulo} onChange={(e) => setNuevoBlog({...nuevoBlog, titulo: e.target.value})} required />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input placeholder="Categoría (ej: Noticias, Eventos...)" value={nuevoBlog.categoria} onChange={(e) => setNuevoBlog({...nuevoBlog, categoria: e.target.value})} />
+                    <Input placeholder="URL de imagen de portada (opcional)" value={nuevoBlog.imagen_url} onChange={(e) => setNuevoBlog({...nuevoBlog, imagen_url: e.target.value})} />
+                  </div>
+                  <Textarea placeholder="Contenido de la entrada..." value={nuevoBlog.contenido} onChange={(e) => setNuevoBlog({...nuevoBlog, contenido: e.target.value})} required className="min-h-[300px]" />
+                  <Button type="submit" disabled={publicandoBlog} className="w-full bg-purple-700 hover:bg-purple-800">{publicandoBlog ? <Loader2 className="animate-spin" /> : "Publicar Entrada"}</Button>
+                </form>
+              </CardContent>
+            </Card>
+            <Card className="p-4 bg-slate-50">
+              <h3 className="font-bold mb-4">Entradas Recientes</h3>
+              {blogs.map(b => (
+                <div key={b.id} className="flex justify-between items-center bg-white p-2 mb-2 rounded border">
+                  <span className="text-sm truncate">{b.titulo}</span>
+                  <Button variant="ghost" size="sm" onClick={() => eliminarElemento('blog', b.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
+                </div>
+              ))}
+              {blogs.length === 0 && <p className="text-xs text-slate-400 italic">No hay entradas publicadas.</p>}
+            </Card>
+          </div>
         </TabsContent>
 
         {/* CONTENIDO: GALERÍA */}
