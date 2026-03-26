@@ -12,8 +12,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel = [
-  { id: 1, url: "/img/dia_matemaatica.png", alt: "día de las matemáticas" },
-  { id: 2, url: "/img/banner2.jpg", alt: "Jornada de elecciones" },
+  { id: 1, url: "/img/bandep.png", alt: "Semana deportiva Kennedista 2026"},
   { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"}
 ];
 
@@ -54,12 +53,19 @@ const Home = () => {
               {imagenesCarrusel.map((imagen) => {
                 // Si es banner2.jpg, hacer clic para ir a la galería de elección y reducir tamaño
                 const isEleccionBanner = imagen.url === "/img/banner2.jpg";
+                const isFormBanner = imagen.id === 1;
+                const handleBannerClick = () => {
+                  if (isFormBanner) {
+                    window.open("https://docs.google.com/forms/d/e/1FAIpQLScHykcr2OpLeuJU_uViDo3RwnnWqRrTvd6vw-Zch3603ehY0g/viewform?usp=publish-editor", "_blank");
+                  }
+                };
                 const bannerContent = (
-                  <div className="relative aspect-[16/9] md:aspect-[21/7]">
+                  <div className="relative w-full h-[280px] md:h-[480px] -m-4">
                     <img
                       src={imagen.url}
                       alt={imagen.alt}
-                      className={isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
+                      onClick={handleBannerClick}
+                      className={isFormBanner ? "object-cover w-full h-full cursor-pointer" : isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
                     />
                     {/* Overlay informativo sobre la imagen */}
                     <div className={
