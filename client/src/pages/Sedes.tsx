@@ -5,11 +5,11 @@ const Sedes = () => {
   const sedes = [
     {
       nombre: "Sede Kennedy",
-      imagen: "/img/sede-bachillerato.jpeg"
+      imagen: "/img/sede-principal.jpeg"
     },
     {
       nombre: "Sede General Santander",
-      imagen: "/img/sede-bachillerato.jpeg"
+      imagen: "/img/general-santander.jpeg"
     },
     {
       nombre: "Sede Romaza",
