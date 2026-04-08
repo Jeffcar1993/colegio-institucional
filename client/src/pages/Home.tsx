@@ -154,13 +154,13 @@ const Home = () => {
           <div>
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
-              <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">27 MAR, 2026</p>
-                <h4 className="font-bold">Día de la tierra</h4>
-              </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
                 <p className="text-sm text-blue-700 font-bold">10 ABR, 2026</p>
                 <h4 className="font-bold">Entrega de boletines y escuela de padres</h4>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
+                <p className="text-sm text-green-700 font-bold">14 al 17 ABR, 2026</p>
+                <h4 className="font-bold">Semana deportiva institucional</h4>
               </div>
             </div>
           </div>

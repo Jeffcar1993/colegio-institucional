@@ -8,7 +8,7 @@ const Horarios = () => {
           {/* Tarjeta Kennedy */}
           <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-8 flex flex-col items-center hover:shadow-2xl transition-all">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
-              <img src="/img/sede-bachillerato.jpeg" alt="Sede Kennedy" className="w-full h-full object-cover" />
+              <img src="/img/sede-principal.jpeg" alt="Sede Kennedy" className="w-full h-full object-cover" />
             </div>
             <h2 className="text-xl font-bold text-green-800 mb-2 text-center">Horarios Sede Kennedy</h2>
             <p className="text-slate-600 text-center mb-4">Consulta los horarios académicos de la sede principal.</p>
@@ -22,7 +22,7 @@ const Horarios = () => {
           {/* Tarjeta General Santander */}
           <div className="bg-white rounded-2xl shadow-lg border border-green-100 p-8 flex flex-col items-center hover:shadow-2xl transition-all">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
-              <img src="/img/sede-bachillerato.jpeg" alt="Sede General Santander" className="w-full h-full object-cover" />
+              <img src="/img/general-santander.jpeg" alt="Sede General Santander" className="w-full h-full object-cover" />
             </div>
             <h2 className="text-xl font-bold text-green-800 mb-2 text-center">Horarios Sede General Santander</h2>
             <p className="text-slate-600 text-center mb-4">Horarios para la sede General Santander.</p>
