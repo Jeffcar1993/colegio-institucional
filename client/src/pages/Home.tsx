@@ -13,7 +13,8 @@ import React from "react";
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel = [
   { id: 1, url: "/img/bandep.png", alt: "Semana deportiva Kennedista 2026"},
-  { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"}
+  { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
+  { id: 4, url: "/img/escuela-familia.png", alt: "Accede directamente a la reunión", href: "https://teams.microsoft.com/l/meetup-join/19%3ameeting_NTk2ODk2MGYtYTZlNi00OWViLTliNzYtMTJlYzIzZTM3NDQ5%40thread.v2/0?context=%7b%22Tid%22%3a%22329e62c5-bc99-4b20-af12-eaf7925850dd%22%2c%22Oid%22%3a%22ba801820-7eea-455e-99c2-37c86ab7ff51%22%7d" }
 ];
 
 const Home = () => {
@@ -85,6 +86,8 @@ const Home = () => {
                 const handleBannerClick = () => {
                   if (isFormBanner) {
                     window.open("https://docs.google.com/forms/d/e/1FAIpQLScHykcr2OpLeuJU_uViDo3RwnnWqRrTvd6vw-Zch3603ehY0g/viewform?usp=publish-editor", "_blank");
+                  } else if (imagen.href) {
+                    window.open(imagen.href, "_blank");
                   }
                 };
                 const bannerContent = (
@@ -93,7 +96,7 @@ const Home = () => {
                       src={imagen.url}
                       alt={imagen.alt}
                       onClick={handleBannerClick}
-                      className={isFormBanner ? "object-cover w-full h-full cursor-pointer" : isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
+                      className={(isFormBanner || imagen.href) ? "object-cover w-full h-full cursor-pointer" : isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
                     />
                     {/* Overlay informativo sobre la imagen */}
                     <div className={
