@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Users, Award } from "lucide-react";
+import { GraduationCap, Users, Award, Trophy, FileDown } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -37,6 +37,34 @@ const Home = () => {
           <p className="text-xl md:text-2xl mb-8 text-slate-200 font-light">
             Formando seres críticos para un desarrollo integral.
           </p>
+        </div>
+      </section>
+
+      {/* CRONOGRAMA SEMANA DEPORTIVA */}
+      <section className="py-10 bg-gradient-to-r from-green-700 via-green-600 to-emerald-500">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-5 text-white">
+            <Trophy size={56} className="shrink-0 drop-shadow-lg" />
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-widest text-green-200">14 – 17 Abril · 2026</p>
+              <h2 className="text-2xl md:text-3xl font-extrabold leading-tight drop-shadow">Semana Deportiva Institucional</h2>
+              <p className="text-green-100 text-sm mt-1">Consulta el cronograma completo de actividades y disciplinas.</p>
+            </div>
+          </div>
+          <a
+            href="/docs/cronograma-semana-deportiva.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
+            <Button
+              size="lg"
+              className="bg-white text-green-800 hover:bg-green-50 font-extrabold text-base px-8 py-6 rounded-2xl shadow-xl flex items-center gap-3 border-2 border-white/60 transition-transform hover:scale-105"
+            >
+              <FileDown size={22} />
+              Cronograma Semana Deportiva 2026
+            </Button>
+          </a>
         </div>
       </section>
 
