@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Mail, Phone, MapPin } from 'lucide-react';
 import escudo from '../assets/escudo.jpeg';
 
 const Footer = () => {
@@ -66,17 +66,11 @@ const Footer = () => {
           </div>
 
           {/* Columna 4: Redes Sociales */}
-          <div className="flex flex-col items-center md:items-start">
+          <div className="flex flex-col items-center">
             <h3 className="text-white font-bold mb-5 uppercase text-xs tracking-widest">Síguenos</h3>
             <div className="flex gap-4">
-              <a href="#" aria-label="Facebook" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
+              <a href="https://www.facebook.com/iekennedy.san.pedro.de.jagua" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
                 <Facebook size={20} />
-              </a>
-              <a href="#" aria-label="Instagram" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
-                <Instagram size={20} />
-              </a>
-              <a href="#" aria-label="Twitter" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
-                <Twitter size={20} />
               </a>
             </div>
           </div>

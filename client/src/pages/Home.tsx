@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Users, Award, Trophy, FileDown } from "lucide-react";
+import { GraduationCap, Users, Award } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -11,10 +11,8 @@ import Autoplay from "embla-carousel-autoplay";
 import React from "react";
 
 // Configura aquí tus imágenes informativas
-const imagenesCarrusel = [
-  { id: 1, url: "/img/bandep.png", alt: "Semana deportiva Kennedista 2026"},
+const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
   { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
-  { id: 4, url: "/img/escuela-familia.png", alt: "Accede directamente a la reunión", href: "https://teams.microsoft.com/l/meetup-join/19%3ameeting_NTk2ODk2MGYtYTZlNi00OWViLTliNzYtMTJlYzIzZTM3NDQ5%40thread.v2/0?context=%7b%22Tid%22%3a%22329e62c5-bc99-4b20-af12-eaf7925850dd%22%2c%22Oid%22%3a%22ba801820-7eea-455e-99c2-37c86ab7ff51%22%7d" }
 ];
 
 const Home = () => {
@@ -41,33 +39,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CRONOGRAMA SEMANA DEPORTIVA */}
-      <section className="py-10 bg-gradient-to-r from-green-700 via-green-600 to-emerald-500">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-5 text-white">
-            <Trophy size={56} className="shrink-0 drop-shadow-lg" />
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-widest text-green-200">14 – 17 Abril · 2026</p>
-              <h2 className="text-2xl md:text-3xl font-extrabold leading-tight drop-shadow">Semana Deportiva Institucional</h2>
-              <p className="text-green-100 text-sm mt-1">Consulta el cronograma completo de actividades y disciplinas.</p>
-            </div>
-          </div>
-          <a
-            href="/docs/cronograma-semana-deportiva.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0"
-          >
-            <Button
-              size="lg"
-              className="bg-white text-green-800 hover:bg-green-50 font-extrabold text-base px-8 py-6 rounded-2xl shadow-xl flex items-center gap-3 border-2 border-white/60 transition-transform hover:scale-105"
-            >
-              <FileDown size={22} />
-              Cronograma Semana Deportiva 2026
-            </Button>
-          </a>
-        </div>
-      </section>
+
 
       {/* NUEVA SECCIÓN: CARRUSEL INFORMATIVO */}
       <section className="py-12 bg-slate-100">
@@ -82,11 +54,8 @@ const Home = () => {
               {imagenesCarrusel.map((imagen) => {
                 // Si es banner2.jpg, hacer clic para ir a la galería de elección y reducir tamaño
                 const isEleccionBanner = imagen.url === "/img/banner2.jpg";
-                const isFormBanner = imagen.id === 1;
                 const handleBannerClick = () => {
-                  if (isFormBanner) {
-                    window.open("https://docs.google.com/forms/d/e/1FAIpQLScHykcr2OpLeuJU_uViDo3RwnnWqRrTvd6vw-Zch3603ehY0g/viewform?usp=publish-editor", "_blank");
-                  } else if (imagen.href) {
+                  if (imagen.href) {
                     window.open(imagen.href, "_blank");
                   }
                 };
@@ -96,7 +65,7 @@ const Home = () => {
                       src={imagen.url}
                       alt={imagen.alt}
                       onClick={handleBannerClick}
-                      className={(isFormBanner || imagen.href) ? "object-cover w-full h-full cursor-pointer" : isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
+                      className={imagen.href ? "object-cover w-full h-full cursor-pointer" : isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
                     />
                     {/* Overlay informativo sobre la imagen */}
                     <div className={
@@ -186,12 +155,12 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
-                <p className="text-sm text-blue-700 font-bold">10 ABR, 2026</p>
-                <h4 className="font-bold">Entrega de boletines y escuela de padres</h4>
+                <p className="text-sm text-blue-700 font-bold">23 ABR, 2026</p>
+                <h4 className="font-bold">Día del idioma.</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">14 al 17 ABR, 2026</p>
-                <h4 className="font-bold">Semana deportiva institucional</h4>
+                <p className="text-sm text-green-700 font-bold">30 ABR, 2026</p>
+                <h4 className="font-bold">Día del niño.</h4>
               </div>
             </div>
           </div>
