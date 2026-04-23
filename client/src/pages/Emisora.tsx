@@ -66,21 +66,38 @@ const Emisora = () => {
       {/* Tarjeta del reproductor */}
       <div className="emisora-card">
         {!scriptError ? (
-          <div ref={widgetHostRef} className="emisora-widget-shell">
-            <div
-              data-type="newStreamPlayer"
-              data-publicToken={widgetToken}
-              data-theme="light"
-              data-color="16a34a"
-              data-channelId=""
-              data-rendered="false"
-              className="cstrEmbed"
-            >
-              <a href="https://www.caster.fm">Shoutcast Hosting</a>{' '}
-              <a href="https://www.caster.fm">Stream Hosting</a>{' '}
-              <a href="https://www.caster.fm">Radio Server Hosting</a>
+          <>
+            <div ref={widgetHostRef} className="emisora-widget-shell">
+              <div
+                data-type="newStreamPlayer"
+                data-publicToken={widgetToken}
+                data-theme="light"
+                data-color="16a34a"
+                data-channelId=""
+                data-rendered="false"
+                className="cstrEmbed"
+              >
+                <a href="https://www.caster.fm" target="_blank" rel="noreferrer">Shoutcast Hosting</a>{' '}
+                <a href="https://www.caster.fm" target="_blank" rel="noreferrer">Stream Hosting</a>{' '}
+                <a href="https://www.caster.fm" target="_blank" rel="noreferrer">Radio Server Hosting</a>
+              </div>
             </div>
-          </div>
+
+            <p className="mt-2 text-[11px] text-slate-400 text-center" aria-label="Desarrollado por Caster.fm">
+              Desarrollado por{' '}
+              <a className="underline hover:text-slate-500" href="https://www.caster.fm" target="_blank" rel="noreferrer">
+                Caster.fm
+              </a>{' '}
+              ·{' '}
+              <a className="underline hover:text-slate-500" href="https://www.caster.fm" target="_blank" rel="noreferrer">
+                Stream Hosting
+              </a>{' '}
+              ·{' '}
+              <a className="underline hover:text-slate-500" href="https://www.caster.fm" target="_blank" rel="noreferrer">
+                Radio Server Hosting
+              </a>
+            </p>
+          </>
         ) : (
           <div className="flex flex-col items-center gap-2 py-8 text-slate-400 text-sm text-center">
             <Radio size={28} strokeWidth={1.5} />
