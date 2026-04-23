@@ -9,6 +9,7 @@ import { Suspense, lazy } from 'react';
 const Comunicados = lazy(() => import('./pages/Comunicados'));
 const Galeria = lazy(() => import('./pages/Galeria'));
 const Blog = lazy(() => import('./pages/Blog'));
+const Emisora = lazy(() => import('./pages/Emisora'));
 import AdminDashboard from './pages/Admin';
 import Chatbot from './pages/Chatbot';
 import AlbumDetalle from './pages/AlbumDetalle';
@@ -58,6 +59,11 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/cronograma" element={<Cronograma />} />
             <Route path="/horarios" element={<Horarios />} />
+            <Route path="/emisora" element={
+              <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500"><Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" /><p>Cargando emisora...</p></div>}>
+                <Emisora />
+              </Suspense>
+            } />
             <Route path="/blog" element={
               <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500"><Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" /><p>Cargando blog...</p></div>}>
                 <Blog />

@@ -78,6 +78,16 @@ const Navbar = () => {
             <Link to="/contacto" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Contacto</Link>
             <Link to="/comunicados" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Comunicados</Link>
             <Link to="/galeria" className="hover:text-green-600 transition-colors text-sm uppercase tracking-wide">Galeria</Link>
+            <Link
+              to="/emisora"
+              className="flex items-center gap-1.5 hover:text-green-600 transition-colors text-sm uppercase tracking-wide"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+              </span>
+              Emisora
+            </Link>
             <Link 
               to="/blog" 
               className="bg-gradient-to-r from-green-500 to-green-700 text-white font-bold rounded-full px-5 py-2 shadow-lg hover:scale-105 hover:from-green-600 hover:to-green-800 transition-all text-sm uppercase tracking-wide border border-green-600"
@@ -122,6 +132,17 @@ const Navbar = () => {
           <Link to="/contacto" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Contacto</Link>
           <Link to="/comunicados" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Comunicados</Link>
           <Link to="/galeria" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 font-medium">Galeria</Link>
+          <Link
+            to="/emisora"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-2 px-3 py-2 text-gray-700 font-medium"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
+            Emisora
+          </Link>
           <Link 
             to="/blog" 
             onClick={() => setIsOpen(false)} 

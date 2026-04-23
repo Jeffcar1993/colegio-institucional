@@ -2,6 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { Readable } from 'stream';
 import { pool } from './db.js';
 
 dotenv.config();
@@ -9,6 +10,78 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// --- RELAY DE EMISORA (PLAN B) ---
+app.get('/api/radio/live', async (_req: Request, res: Response) => {
+  const sourceUrl = process.env.RADIO_SOURCE_URL;
+  const sourceUser = process.env.RADIO_SOURCE_USERNAME;
+  const sourcePassword = process.env.RADIO_SOURCE_PASSWORD;
+
+  if (!sourceUrl || !sourceUser || !sourcePassword) {
+    return res.status(503).json({
+      error: 'Relay no configurado',
+      detalle: 'Faltan RADIO_SOURCE_URL, RADIO_SOURCE_USERNAME o RADIO_SOURCE_PASSWORD en el servidor',
+    });
+  }
+
+  const abortController = new AbortController();
+  const timeout = setTimeout(() => abortController.abort(), 8000);
+
+  try {
+    const basicAuth = Buffer.from(`${sourceUser}:${sourcePassword}`).toString('base64');
+    const upstreamResponse = await fetch(sourceUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        Accept: 'audio/aac,audio/mpeg,*/*',
+        'User-Agent': 'IED-Kennedy-RadioRelay/1.0',
+      },
+      redirect: 'follow',
+      signal: abortController.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!upstreamResponse.ok || !upstreamResponse.body) {
+      return res.status(502).json({
+        error: 'No se pudo conectar a la emisora',
+        status: upstreamResponse.status,
+      });
+    }
+
+    const contentType = upstreamResponse.headers.get('content-type') || 'audio/mpeg';
+
+    res.status(200);
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('X-Accel-Buffering', 'no');
+
+    const nodeStream = Readable.fromWeb(upstreamResponse.body as any);
+
+    res.on('close', () => {
+      nodeStream.destroy();
+    });
+
+    nodeStream.on('error', () => {
+      if (!res.headersSent) {
+        res.status(502).end();
+      } else {
+        res.end();
+      }
+    });
+
+    nodeStream.pipe(res);
+  } catch (error) {
+    clearTimeout(timeout);
+    const mensaje = error instanceof Error ? error.message : 'Error desconocido';
+    return res.status(502).json({
+      error: 'Error en relay de radio',
+      detalle: mensaje,
+    });
+  }
+});
 
 // --- 1. UTILIDADES ---
 const normalizarTexto = (texto: string): string => {

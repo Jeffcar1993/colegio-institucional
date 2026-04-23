@@ -12,6 +12,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
+  { id: 1, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
 ];
 
@@ -52,12 +53,15 @@ const Home = () => {
           >
             <CarouselContent>
               {imagenesCarrusel.map((imagen) => {
-                // Si es banner2.jpg, hacer clic para ir a la galería de elección y reducir tamaño
-                const isEleccionBanner = imagen.url === "/img/banner2.jpg";
                 const handleBannerClick = () => {
-                  if (imagen.href) {
-                    window.open(imagen.href, "_blank");
+                  if (!imagen.href) return;
+
+                  if (imagen.href.startsWith('/')) {
+                    window.location.href = imagen.href;
+                    return;
                   }
+
+                  window.open(imagen.href, '_blank');
                 };
                 const bannerContent = (
                   <div className="relative w-full h-[280px] md:h-[480px] -m-4">
@@ -65,14 +69,10 @@ const Home = () => {
                       src={imagen.url}
                       alt={imagen.alt}
                       onClick={handleBannerClick}
-                      className={imagen.href ? "object-cover w-full h-full cursor-pointer" : isEleccionBanner ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
+                      className={imagen.href ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
                     />
                     {/* Overlay informativo sobre la imagen */}
-                    <div className={
-                      isEleccionBanner
-                        ? "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8 text-white"
-                        : "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 text-white"
-                    }>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 text-white">
                       <h3 className="text-xl md:text-2xl font-bold drop-shadow-lg">{imagen.alt}</h3>
                     </div>
                   </div>

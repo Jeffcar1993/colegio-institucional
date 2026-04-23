@@ -17,3 +17,186 @@ body {
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
+
+/* ── PÁGINA EMISORA ─────────────────────────────────────── */
+.emisora-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #e11d48;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  padding: 5px 12px;
+}
+
+.emisora-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  flex-shrink: 0;
+  animation: radioPulse 1.7s infinite;
+}
+
+.emisora-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+  padding: 24px 20px 16px;
+}
+
+.emisora-widget-shell {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.emisora-widget-shell .cstrEmbed {
+  width: 100%;
+  max-width: 380px;
+  transform: scale(0.9);
+  transform-origin: center top;
+  margin: 0 auto -12px;
+}
+
+@media (max-width: 480px) {
+  .emisora-card {
+    border-radius: 14px;
+    padding: 18px 14px 12px;
+  }
+  .emisora-widget-shell .cstrEmbed {
+    transform: scale(0.82);
+    margin: 0 auto -16px;
+  }
+}
+
+/* ── EDITORIAL MODERN RADIO BAR ─────────────────────────── */
+.radio-editorial-bar {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  overflow: hidden;
+}
+
+/* Franja de acento verde institucional */
+.radio-editorial-accent {
+  width: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+}
+
+.radio-editorial-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 6px 16px 6px 14px;
+}
+
+.radio-editorial-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.radio-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 9999px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  font-size: 9px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.radio-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  flex-shrink: 0;
+  animation: radioPulse 1.7s infinite;
+}
+
+@keyframes radioPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+  70%  { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.radio-editorial-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.radio-editorial-desc {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radio-editorial-error {
+  font-size: 11px;
+  color: #475569;
+  padding: 8px 0;
+}
+
+/* ── WIDGET SHELL ────────────────────────────────────────── */
+.radio-widget-shell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  min-width: 0;
+}
+
+.radio-widget-shell .cstrEmbed {
+  width: 100%;
+  max-width: 340px;
+  transform: scale(0.84);
+  transform-origin: center center;
+  margin: 0 0 0 auto;
+}
+
+@media (max-width: 640px) {
+  .radio-editorial-inner {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  .radio-editorial-name {
+    font-size: 12px;
+  }
+  .radio-widget-shell .cstrEmbed {
+    max-width: 240px;
+    transform: scale(0.78);
+    transform-origin: center center;
+  }
+}
