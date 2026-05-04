@@ -13,6 +13,7 @@ import React from "react";
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
   { id: 1, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
+  { id: 2, url: "/img/ban-ev.png", alt: "Evalua la Semana Deportiva", href: "https://forms.gle/2HoEdEJLg6ZX8Q7j7" },
   { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
 ];
 
