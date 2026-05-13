@@ -12,8 +12,8 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
-  { id: 1, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
-  { id: 2, url: "/img/ban-ev.png", alt: "Evalua la Semana Deportiva", href: "https://forms.gle/2HoEdEJLg6ZX8Q7j7" },
+  { id: 1, url: "/img/maestro.avif", alt: "¡Feliz Día del Maestro!" },
+  { id: 2, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
   { id: 4, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
 ];
@@ -157,12 +157,12 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
-                <p className="text-sm text-blue-700 font-bold">23 ABR, 2026</p>
-                <h4 className="font-bold">Día del idioma.</h4>
+                <p className="text-sm text-blue-700 font-bold">15 MAY, 2026</p>
+                <h4 className="font-bold">Día del maestro.</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">30 ABR, 2026</p>
-                <h4 className="font-bold">Día del niño.</h4>
+                <p className="text-sm text-green-700 font-bold">22 MAY, 2026</p>
+                <h4 className="font-bold">English day.</h4>
               </div>
             </div>
           </div>
