@@ -12,7 +12,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
-  { id: 1, url: "/img/maestro.avif", alt: "¡Feliz Día del Maestro!" },
+  { id: 1, url: "/img/ban-madres.png", alt: "Invitación a las madres kennedystas" },
   { id: 2, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
   { id: 4, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
@@ -55,6 +55,7 @@ const Home = () => {
           >
             <CarouselContent>
               {imagenesCarrusel.map((imagen) => {
+                const esBannerMadres = imagen.url === "/img/ban-madres.png";
                 const handleBannerClick = () => {
                   if (!imagen.href) return;
 
@@ -71,7 +72,10 @@ const Home = () => {
                       src={imagen.url}
                       alt={imagen.alt}
                       onClick={handleBannerClick}
-                      className={imagen.href ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full"}
+                      className={[
+                        imagen.href ? "object-cover w-full h-full cursor-pointer" : "object-cover w-full h-full",
+                        esBannerMadres ? "scale-95" : "",
+                      ].join(" ")}
                     />
                     {/* Overlay informativo sobre la imagen */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 text-white">
