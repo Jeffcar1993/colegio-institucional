@@ -3,7 +3,6 @@ import type { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Readable } from 'stream';
-import { createHash } from 'crypto';
 import { pool } from './db.js';
 
 dotenv.config();
@@ -14,44 +13,12 @@ app.use(express.json());
 
 const VISIT_COUNTER_KEY = 'website_visits';
 
-const obtenerIpCliente = (req: Request): string => {
-  const forwardedFor = req.headers['x-forwarded-for'];
-
-  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
-    return forwardedFor[0]?.split(',')[0]?.trim() || 'unknown-ip';
-  }
-
-  if (typeof forwardedFor === 'string' && forwardedFor.length > 0) {
-    return forwardedFor.split(',')[0]?.trim() || 'unknown-ip';
-  }
-
-  return req.socket.remoteAddress || 'unknown-ip';
-};
-
-const construirVisitorKey = (req: Request): string => {
-  const ip = obtenerIpCliente(req);
-  const userAgent = req.headers['user-agent'] || 'unknown-agent';
-  const fecha = new Date().toISOString().slice(0, 10);
-
-  return createHash('sha256').update(`${ip}|${userAgent}|${fecha}`).digest('hex');
-};
-
 const inicializarTablasVisitas = async (): Promise<void> => {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS site_metrics (
       metric_key TEXT PRIMARY KEY,
       metric_value BIGINT NOT NULL DEFAULT 0,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `);
-
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS visit_logs (
-      id BIGSERIAL PRIMARY KEY,
-      visitor_key TEXT NOT NULL,
-      visited_on DATE NOT NULL DEFAULT CURRENT_DATE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      UNIQUE (visited_on, visitor_key)
     )
   `);
 
@@ -170,29 +137,18 @@ app.get('/api/visitas', async (_req: Request, res: Response) => {
 });
 
 app.post('/api/visitas/registrar', async (req: Request, res: Response) => {
-  const visitorKey = construirVisitorKey(req);
   const client = await pool.connect();
 
   try {
     await client.query('BEGIN');
 
-    const insercion = await client.query(
-      `INSERT INTO visit_logs (visitor_key, visited_on)
-       VALUES ($1, CURRENT_DATE)
-       ON CONFLICT (visited_on, visitor_key) DO NOTHING
-       RETURNING id`,
-      [visitorKey]
+    await client.query(
+      `UPDATE site_metrics
+       SET metric_value = metric_value + 1,
+           updated_at = NOW()
+       WHERE metric_key = $1`,
+      [VISIT_COUNTER_KEY]
     );
-
-    if (insercion.rowCount === 1) {
-      await client.query(
-        `UPDATE site_metrics
-         SET metric_value = metric_value + 1,
-             updated_at = NOW()
-         WHERE metric_key = $1`,
-        [VISIT_COUNTER_KEY]
-      );
-    }
 
     const totalResult = await client.query(
       'SELECT metric_value FROM site_metrics WHERE metric_key = $1',
@@ -203,7 +159,7 @@ app.post('/api/visitas/registrar', async (req: Request, res: Response) => {
 
     res.json({
       total: Number(totalResult.rows[0]?.metric_value || 0),
-      nuevo_visitante: insercion.rowCount === 1,
+      incrementado: true,
     });
   } catch (error) {
     await client.query('ROLLBACK');

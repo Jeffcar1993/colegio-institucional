@@ -13,16 +13,8 @@ const Footer = () => {
 
     const cargarContador = async () => {
       try {
-        const storageKey = 'ied_kennedy_last_visit_date';
-        const hoy = new Date().toISOString().slice(0, 10);
-        const visitaYaRegistrada = window.localStorage.getItem(storageKey) === hoy;
-
-        const endpoint = visitaYaRegistrada
-          ? `${API_BASE_URL}/api/visitas`
-          : `${API_BASE_URL}/api/visitas/registrar`;
-
-        const response = await fetch(endpoint, {
-          method: visitaYaRegistrada ? 'GET' : 'POST',
+        const response = await fetch(`${API_BASE_URL}/api/visitas/registrar`, {
+          method: 'POST',
         });
 
         if (!response.ok) {
@@ -34,10 +26,6 @@ const Footer = () => {
 
         if (activo) {
           setCantidadVisitantes(total);
-        }
-
-        if (!visitaYaRegistrada) {
-          window.localStorage.setItem(storageKey, hoy);
         }
       } catch (_error) {
         if (activo) {
