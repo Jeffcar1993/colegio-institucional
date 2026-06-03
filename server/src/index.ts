@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Readable } from 'stream';
+import { createHash } from 'crypto';
 import { pool } from './db.js';
 
 dotenv.config();
@@ -10,6 +11,57 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const VISIT_COUNTER_KEY = 'website_visits';
+
+const obtenerIpCliente = (req: Request): string => {
+  const forwardedFor = req.headers['x-forwarded-for'];
+
+  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
+    return forwardedFor[0]?.split(',')[0]?.trim() || 'unknown-ip';
+  }
+
+  if (typeof forwardedFor === 'string' && forwardedFor.length > 0) {
+    return forwardedFor.split(',')[0]?.trim() || 'unknown-ip';
+  }
+
+  return req.socket.remoteAddress || 'unknown-ip';
+};
+
+const construirVisitorKey = (req: Request): string => {
+  const ip = obtenerIpCliente(req);
+  const userAgent = req.headers['user-agent'] || 'unknown-agent';
+  const fecha = new Date().toISOString().slice(0, 10);
+
+  return createHash('sha256').update(`${ip}|${userAgent}|${fecha}`).digest('hex');
+};
+
+const inicializarTablasVisitas = async (): Promise<void> => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS site_metrics (
+      metric_key TEXT PRIMARY KEY,
+      metric_value BIGINT NOT NULL DEFAULT 0,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS visit_logs (
+      id BIGSERIAL PRIMARY KEY,
+      visitor_key TEXT NOT NULL,
+      visited_on DATE NOT NULL DEFAULT CURRENT_DATE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (visited_on, visitor_key)
+    )
+  `);
+
+  await pool.query(
+    `INSERT INTO site_metrics (metric_key, metric_value)
+     VALUES ($1, 0)
+     ON CONFLICT (metric_key) DO NOTHING`,
+    [VISIT_COUNTER_KEY]
+  );
+};
 
 // --- RELAY DE EMISORA (PLAN B) ---
 app.get('/api/radio/live', async (_req: Request, res: Response) => {
@@ -101,6 +153,65 @@ const contenidoIndexable = [
   { pagina: 'admisiones', ruta: '/admisiones', titulo: 'Admisiones', palabras_clave: ['matricula', 'inscripcion', 'cupos', 'costos'], descripcion: 'Proceso de admisión 2026' },
   { pagina: 'contacto', ruta: '/contacto', titulo: 'Contacto', palabras_clave: ['telefono', 'ubicacion', 'mensaje', 'correo'], descripcion: 'Contacto y atención a padres' }
 ];
+
+// --- 3. RUTAS DE COMUNICADOS ---
+app.get('/api/visitas', async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      'SELECT metric_value FROM site_metrics WHERE metric_key = $1',
+      [VISIT_COUNTER_KEY]
+    );
+
+    const total = Number(result.rows[0]?.metric_value || 0);
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener cantidad de visitantes' });
+  }
+});
+
+app.post('/api/visitas/registrar', async (req: Request, res: Response) => {
+  const visitorKey = construirVisitorKey(req);
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const insercion = await client.query(
+      `INSERT INTO visit_logs (visitor_key, visited_on)
+       VALUES ($1, CURRENT_DATE)
+       ON CONFLICT (visited_on, visitor_key) DO NOTHING
+       RETURNING id`,
+      [visitorKey]
+    );
+
+    if (insercion.rowCount === 1) {
+      await client.query(
+        `UPDATE site_metrics
+         SET metric_value = metric_value + 1,
+             updated_at = NOW()
+         WHERE metric_key = $1`,
+        [VISIT_COUNTER_KEY]
+      );
+    }
+
+    const totalResult = await client.query(
+      'SELECT metric_value FROM site_metrics WHERE metric_key = $1',
+      [VISIT_COUNTER_KEY]
+    );
+
+    await client.query('COMMIT');
+
+    res.json({
+      total: Number(totalResult.rows[0]?.metric_value || 0),
+      nuevo_visitante: insercion.rowCount === 1,
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    res.status(500).json({ error: 'Error al registrar visita' });
+  } finally {
+    client.release();
+  }
+});
 
 // --- 3. RUTAS DE COMUNICADOS ---
 app.get('/api/comunicados', async (req, res) => {
@@ -367,8 +478,19 @@ app.get('/api/chatbot/buscar', async (req: Request, res: Response) => {
   }
 });
 
-// --- 8. INICIO DEL SERVIDOR ---
+// --- 9. INICIO DEL SERVIDOR ---
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor listo en puerto ${PORT}`);
-});
+
+const iniciarServidor = async () => {
+  try {
+    await inicializarTablasVisitas();
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor listo en puerto ${PORT}`);
+    });
+  } catch (error) {
+    console.error('❌ No se pudo inicializar el contador de visitas:', error);
+    process.exit(1);
+  }
+};
+
+iniciarServidor();

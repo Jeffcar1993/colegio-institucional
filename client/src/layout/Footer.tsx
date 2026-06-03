@@ -1,9 +1,57 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Mail, Phone, MapPin } from 'lucide-react';
 import escudo from '../assets/escudo.jpeg';
+import API_BASE_URL from '@/config/api';
 
 const Footer = () => {
   // currentYear eliminado, no se usa
+  const [cantidadVisitantes, setCantidadVisitantes] = useState<number | null>(null);
+
+  useEffect(() => {
+    let activo = true;
+
+    const cargarContador = async () => {
+      try {
+        const storageKey = 'ied_kennedy_last_visit_date';
+        const hoy = new Date().toISOString().slice(0, 10);
+        const visitaYaRegistrada = window.localStorage.getItem(storageKey) === hoy;
+
+        const endpoint = visitaYaRegistrada
+          ? `${API_BASE_URL}/api/visitas`
+          : `${API_BASE_URL}/api/visitas/registrar`;
+
+        const response = await fetch(endpoint, {
+          method: visitaYaRegistrada ? 'GET' : 'POST',
+        });
+
+        if (!response.ok) {
+          throw new Error('No fue posible cargar el contador de visitas');
+        }
+
+        const data = await response.json();
+        const total = Number(data?.total || 0);
+
+        if (activo) {
+          setCantidadVisitantes(total);
+        }
+
+        if (!visitaYaRegistrada) {
+          window.localStorage.setItem(storageKey, hoy);
+        }
+      } catch (_error) {
+        if (activo) {
+          setCantidadVisitantes(null);
+        }
+      }
+    };
+
+    cargarContador();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -72,6 +120,13 @@ const Footer = () => {
               <a href="https://www.facebook.com/iekennedy.san.pedro.de.jagua" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
                 <Facebook size={20} />
               </a>
+            </div>
+
+            <div className="mt-4 w-full max-w-[220px] rounded-xl border border-slate-700/80 bg-slate-800/70 px-4 py-3 text-center">
+              <p className="text-[10px] uppercase tracking-widest text-slate-400">Cantidad de visitantes</p>
+              <p className="mt-1 text-2xl font-extrabold text-green-400 tabular-nums">
+                {cantidadVisitantes !== null ? cantidadVisitantes.toLocaleString('es-CO') : '--'}
+              </p>
             </div>
           </div>
         </div>
