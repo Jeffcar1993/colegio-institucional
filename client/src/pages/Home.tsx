@@ -156,11 +156,11 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
-                <p className="text-sm text-blue-700 font-bold">11 JUN, 2026</p>
-                <h4 className="font-bold">Bimestrales segundo periodo.</h4>
+                <p className="text-sm text-blue-700 font-bold">20 JUL, 2026</p>
+                <h4 className="font-bold">Celbración dia de la independencia</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">19 JUN, 2026</p>
+                <p className="text-sm text-green-700 font-bold">17 JUL, 2026</p>
                 <h4 className="font-bold">Entrega de notas segundo periodo.</h4>
               </div>
             </div>
