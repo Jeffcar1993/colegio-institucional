@@ -15,6 +15,7 @@ const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[
   { id: 1, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 2, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
   { id: 3, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
+  { id: 4, url: "/img/independencia.webp", alt: "Independencia de Colombia" }
 ];
 
 const Home = () => {
