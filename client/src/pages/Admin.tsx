@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Loader2, LogOut, Send, Trash2, Image as ImageIcon, Plus } from "lucide-react";
+import { Loader2, LogOut, Send, Trash2, Image as ImageIcon, Plus, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import API_BASE_URL from "@/config/api";
 
 // --- INTERFACES ---
@@ -64,6 +65,9 @@ export default function AdminDashboard() {
     imagen_url: ""
   });
 
+  const [selectedMensaje, setSelectedMensaje] = useState<Mensaje | null>(null);
+  const [openMensaje, setOpenMensaje] = useState(false);
+
   const [nuevoAlbum, setNuevoAlbum] = useState({ titulo: "" });
   const [nuevoComunicado, setNuevoComunicado] = useState({
     titulo: "",
@@ -108,6 +112,12 @@ export default function AdminDashboard() {
     } catch {
       alert("No se pudo eliminar");
     }
+  };
+
+  const handleEliminarYCerrar = async (id: number) => {
+    await eliminarElemento('contacto', id);
+    setOpenMensaje(false);
+    setSelectedMensaje(null);
   };
 
   // --- GESTIÓN DE GALERÍA (CLOUDINARY) ---
@@ -273,11 +283,12 @@ export default function AdminDashboard() {
                 </TableHeader>
                 <TableBody>
                   {mensajes.map((msg) => (
-                    <TableRow key={msg.id}>
+                    <TableRow key={msg.id} className="hover:bg-slate-50">
                       <TableCell>{msg.nombre}</TableCell>
                       <TableCell>{msg.asunto}</TableCell>
-                      <TableCell>
-                        <Button variant="ghost" onClick={() => eliminarElemento('contacto', msg.id)} className="text-red-500"><Trash2 className="h-4 w-4" /></Button>
+                      <TableCell className="flex items-center gap-2">
+                        <Button variant="ghost" className="cursor-pointer" onClick={() => { setSelectedMensaje(msg); setOpenMensaje(true); }} title="Ver mensaje"><Eye className="h-4 w-4" /></Button>
+                        <Button variant="ghost" className="text-red-500 cursor-pointer" onClick={() => eliminarElemento('contacto', msg.id)}><Trash2 className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -379,6 +390,24 @@ export default function AdminDashboard() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {selectedMensaje && (
+        <Dialog open={openMensaje} onOpenChange={setOpenMensaje}>
+            <DialogContent className="bg-white text-black">
+              <DialogHeader>
+                <DialogTitle>{selectedMensaje.asunto}</DialogTitle>
+                <DialogDescription className="text-sm text-black/80">De: {selectedMensaje.nombre}{selectedMensaje.fecha_envio ? ` — ${new Date(selectedMensaje.fecha_envio).toLocaleString()}` : ""}</DialogDescription>
+              </DialogHeader>
+
+              <div className="mt-4 whitespace-pre-wrap text-black">{selectedMensaje.mensaje}</div>
+
+              <DialogFooter className="mt-6 flex justify-end gap-2">
+                <Button variant="destructive" onClick={() => handleEliminarYCerrar(selectedMensaje.id)} className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">Eliminar</Button>
+                <Button className="cursor-pointer" onClick={() => { setOpenMensaje(false); setSelectedMensaje(null); }}>Cerrar</Button>
+              </DialogFooter>
+            </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
