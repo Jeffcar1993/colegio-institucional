@@ -14,6 +14,7 @@ import API_BASE_URL from "@/config/api";
 interface Mensaje {
   id: number;
   nombre: string;
+  correo: string;
   asunto: string;
   mensaje: string;
   fecha_envio: string | null;
@@ -396,7 +397,11 @@ export default function AdminDashboard() {
             <DialogContent className="bg-white text-black">
               <DialogHeader>
                 <DialogTitle>{selectedMensaje.asunto}</DialogTitle>
-                <DialogDescription className="text-sm text-black/80">De: {selectedMensaje.nombre}{selectedMensaje.fecha_envio ? ` — ${new Date(selectedMensaje.fecha_envio).toLocaleString()}` : ""}</DialogDescription>
+                <DialogDescription className="text-sm text-black/80">
+                  De: {selectedMensaje.nombre}
+                  <div className="text-xs text-slate-600">{selectedMensaje.correo}</div>
+                  {selectedMensaje.fecha_envio ? <div className="mt-1">{new Date(selectedMensaje.fecha_envio).toLocaleString()}</div> : null}
+                </DialogDescription>
               </DialogHeader>
 
               <div className="mt-4 whitespace-pre-wrap text-black">{selectedMensaje.mensaje}</div>
