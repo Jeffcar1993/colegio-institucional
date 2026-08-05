@@ -41,6 +41,24 @@ const Home = () => {
         </div>
       </section>
 
+      {/* SECCIÓN: INVITACIÓN (imagen responsive) */}
+      <section className="py-8 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="w-full rounded-2xl overflow-hidden shadow-md border border-slate-100">
+            <picture>
+              <source media="(min-width:1024px)" srcSet="/img/invitacion.jpg" />
+              <source media="(min-width:640px)" srcSet="/img/invitacion.jpg" />
+              <img
+                src="/img/invitacion.jpg"
+                alt="Invitación: participa en el concurso 'Tu institución tiene una historia que contar'"
+                className="w-full h-auto object-contain block bg-white"
+                loading="lazy"
+              />
+            </picture>
+          </div>
+        </div>
+      </section>
+
 
 
       {/* NUEVA SECCIÓN: CARRUSEL INFORMATIVO */}
