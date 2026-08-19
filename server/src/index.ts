@@ -30,6 +30,23 @@ const inicializarTablasVisitas = async (): Promise<void> => {
   );
 };
 
+const inicializarTablaComunicados = async (): Promise<void> => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS comunicados (
+      id SERIAL PRIMARY KEY,
+      titulo TEXT NOT NULL,
+      categoria TEXT,
+      importancia TEXT,
+      resumen TEXT,
+      contenido_html TEXT,
+      adjunto_url TEXT,
+      fecha_creacion TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`ALTER TABLE comunicados ADD COLUMN IF NOT EXISTS contenido_html TEXT`);
+};
+
 // --- RELAY DE EMISORA (PLAN B) ---
 app.get('/api/radio/live', async (_req: Request, res: Response) => {
   const sourceUrl = process.env.RADIO_SOURCE_URL;
@@ -177,15 +194,52 @@ app.get('/api/comunicados', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error al obtener comunicados" }); }
 });
 
+// Ruta de utilidad para pruebas: devuelve el último comunicado publicado
+app.get('/api/comunicados/ultimo', async (_req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM comunicados ORDER BY fecha_creacion DESC LIMIT 1');
+    res.json(result.rows[0] || null);
+  } catch (error) {
+    console.error('Error al obtener último comunicado:', error);
+    res.status(500).json({ error: 'Error al obtener último comunicado' });
+  }
+});
+
 app.post('/api/comunicados', async (req, res) => {
-  const { titulo, categoria, importancia, resumen, adjunto_url } = req.body;
+  const { titulo, categoria, importancia, resumen, adjunto_url, contenido_html } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO comunicados (titulo, categoria, importancia, resumen, adjunto_url) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [titulo, categoria, importancia, resumen, adjunto_url]
+      "INSERT INTO comunicados (titulo, categoria, importancia, resumen, contenido_html, adjunto_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [titulo, categoria, importancia, resumen, contenido_html || null, adjunto_url || null]
     );
     res.json(result.rows[0]);
-  } catch (err) { res.status(500).send("Error"); }
+  } catch (err) { console.error('Error al insertar comunicado:', err); res.status(500).send("Error"); }
+});
+
+app.put('/api/comunicados/:id', async (req, res) => {
+  const { id } = req.params;
+  const { adjunto_url, contenido_html, titulo, resumen } = req.body;
+  try {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (titulo !== undefined) { fields.push(`titulo = $${idx++}`); values.push(titulo); }
+    if (resumen !== undefined) { fields.push(`resumen = $${idx++}`); values.push(resumen); }
+    if (contenido_html !== undefined) { fields.push(`contenido_html = $${idx++}`); values.push(contenido_html); }
+    if (adjunto_url !== undefined) { fields.push(`adjunto_url = $${idx++}`); values.push(adjunto_url); }
+
+    if (fields.length === 0) return res.status(400).json({ error: 'No fields to update' });
+
+    const query = `UPDATE comunicados SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`;
+    values.push(id);
+
+    const result = await pool.query(query, values);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating comunicado:', err);
+    res.status(500).json({ error: 'Error updating comunicado' });
+  }
 });
 
 app.delete('/api/comunicados/:id', async (req, res) => {
@@ -440,6 +494,7 @@ const PORT = process.env.PORT || 5000;
 const iniciarServidor = async () => {
   try {
     await inicializarTablasVisitas();
+    await inicializarTablaComunicados();
     app.listen(PORT, () => {
       console.log(`🚀 Servidor listo en puerto ${PORT}`);
     });

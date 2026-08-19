@@ -41,25 +41,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* SECCIÓN: INVITACIÓN (imagen responsive) */}
-      <section className="py-8 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="w-full rounded-2xl overflow-hidden shadow-md border border-slate-100">
-            <picture>
-              <source media="(min-width:1024px)" srcSet="/img/invitacion.jpg" />
-              <source media="(min-width:640px)" srcSet="/img/invitacion.jpg" />
-              <img
-                src="/img/invitacion.jpg"
-                alt="Invitación: participa en el concurso 'Tu institución tiene una historia que contar'"
-                className="w-full h-auto object-contain block bg-white"
-                loading="lazy"
-              />
-            </picture>
-          </div>
-        </div>
-      </section>
-
-
 
       {/* NUEVA SECCIÓN: CARRUSEL INFORMATIVO */}
       <section className="py-12 bg-slate-100">
@@ -178,8 +159,8 @@ const Home = () => {
                 <h4 className="font-bold">Feria de emprendimiento</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">11 SEP, 2026</p>
-                <h4 className="font-bold">Día del amor y la amistad</h4>
+                <p className="text-sm text-green-700 font-bold">4 SEP, 2026</p>
+                <h4 className="font-bold">Ciencia y tecnologìa - día de cometas</h4>
               </div>
             </div>
           </div>
