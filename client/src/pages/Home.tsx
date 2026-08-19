@@ -12,10 +12,12 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
-  { id: 1, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
-  { id: 2, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo"},
-  { id: 3, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
+  { id: 1, url: "/img/ban-voley1.png", alt: "Torneo de voley", href: "https://forms.cloud.microsoft/r/uJpxcZJtY9" },
+  { id: 2, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
+  { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo" },
+  { id: 4, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
 ];
+
 
 const Home = () => {
   // Referencia para el Autoplay (3 segundos)
@@ -89,6 +91,35 @@ const Home = () => {
           </Carousel>
         </div>
       </section>
+
+      {/* Card pequeño: Reglamento Torneo Relámpago */}
+          <div className="mt-6 flex justify-center">
+            <div
+              role="link"
+              tabIndex={0}
+              aria-label="Abrir Reglamento Torneo Relámpago (PDF)"
+              onClick={() => window.open('/docs/torneo-relampago.pdf', '_blank')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                  window.open('/docs/torneo-relampago.pdf', '_blank');
+                }
+              }}
+              className="bg-white rounded-xl shadow-lg border-4 border-green-600 p-4 flex items-center gap-4 max-w-md w-full hover:shadow-2xl hover:-translate-y-1 transition-transform duration-200 cursor-pointer"
+            >
+              <img
+                src="/img/voliasset.png"
+                alt="Reglamento Torneo Relámpago"
+                className="w-20 h-20 object-cover rounded-md bg-slate-50"
+              />
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-slate-900">Reglamento Voleibol Torneo Relámpago</h4>
+                <p className="text-sm text-slate-600">Consulta las reglas y el formato del campeonato.</p>
+              </div>
+              <a href="/docs/torneo-relampago.pdf" target="_blank" rel="noopener noreferrer" className="ml-4">
+                <Button className="bg-green-600 hover:bg-green-700 text-white font-bold whitespace-nowrap px-4 py-2 rounded-md shadow-md hover:shadow-lg transition-colors duration-150 cursor-pointer">Abrir PDF</Button>
+              </a>
+            </div>
+          </div>
 
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
