@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import escudo from '../assets/escudo.jpeg';
 import API_BASE_URL from '@/config/api';
 
@@ -27,7 +27,7 @@ const Footer = () => {
         if (activo) {
           setCantidadVisitantes(total);
         }
-      } catch (_error) {
+      } catch {
         if (activo) {
           setCantidadVisitantes(null);
         }
@@ -107,6 +107,9 @@ const Footer = () => {
             <div className="flex gap-4">
               <a href="https://www.facebook.com/iekennedy.san.pedro.de.jagua" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
                 <Facebook size={20} />
+              </a>
+              <a href="https://www.instagram.com/iikenedyy_?igsh=aHM1bWw4b3I0YW1s&igsi=aHM1bWw4b3I0YW1s" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
+                <Instagram size={20} />
               </a>
             </div>
 
