@@ -13,9 +13,10 @@ import React from "react";
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
   { id: 1, url: "/img/ban-voley1.png", alt: "Torneo de voley", href: "https://forms.cloud.microsoft/r/uJpxcZJtY9" },
-  { id: 2, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
-  { id: 3, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo" },
-  { id: 4, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
+  { id: 2, url: "/img/feria.png", alt: "Feria de emprendimiento"},
+  { id: 3, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
+  { id: 4, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo" },
+  { id: 5, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
 ];
 
 
