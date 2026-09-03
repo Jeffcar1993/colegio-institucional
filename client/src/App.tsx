@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
 import Home from './pages/Home';
@@ -18,7 +18,6 @@ import Sedes from './pages/Sedes';
 import DocumentosInstitucionales from './pages/DocumentosInstitucionales';
 import SimbolosInstitucionales from './pages/SimbolosInstitucionales';
 import Cronograma from './pages/Cronograma';
-import Horarios from './pages/Horarios';
 import { Loader2 } from 'lucide-react';
 
 function ScrollToTop() {
@@ -58,17 +57,17 @@ function App() {
             <Route path="/galeria/:id" element={<AlbumDetalle />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/cronograma" element={<Cronograma />} />
-            <Route path="/horarios" element={<Horarios />} />
             <Route path="/emisora" element={
               <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500"><Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" /><p>Cargando emisora...</p></div>}>
                 <Emisora />
               </Suspense>
             } />
-            <Route path="/blog" element={
-              <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500"><Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" /><p>Cargando blog...</p></div>}>
+            <Route path="/entre-letras" element={
+              <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500"><Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" /><p>Cargando Entre Letras...</p></div>}>
                 <Blog />
               </Suspense>
             } />
+            <Route path="/blog" element={<Navigate to="/entre-letras" replace />} />
           </Routes>
         </main>
         <Chatbot />

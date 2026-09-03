@@ -22,7 +22,7 @@ interface BlogPost {
   fecha_creacion: string;
 }
 
-export default function Blog() {
+export default function EntreLetras() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,7 +52,7 @@ export default function Blog() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500">
         <Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" />
-        <p>Cargando entradas del blog...</p>
+        <p>Cargando entradas de Entre Letras...</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ export default function Blog() {
           <BookOpen size={32} />
         </div>
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Blog Institucional</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Entre Letras</h1>
           <p className="text-slate-500 mt-1 text-lg">Noticias, eventos y vida escolar</p>
         </div>
       </div>
@@ -144,7 +144,7 @@ export default function Blog() {
           ))
         ) : (
           <div className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-            <p className="text-slate-500 font-medium italic">Aun no hay articulos publicados en el blog.</p>
+            <p className="text-slate-500 font-medium italic">Aún no hay artículos publicados en Entre Letras.</p>
           </div>
         )}
       </div>

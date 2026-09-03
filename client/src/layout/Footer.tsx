@@ -71,7 +71,6 @@ const Footer = () => {
               <li><Link to="/documentos-institucionales" className="hover:text-green-500 transition-colors">Documentos Oficiales</Link></li>
               <li><Link to="/contacto" className="hover:text-green-500 transition-colors">Contacto</Link></li>
               <li><Link to="/cronograma" className="hover:text-green-500 transition-colors">Cronograma</Link></li>
-              <li><Link to="/horarios" className="hover:text-green-500 transition-colors">Horarios</Link></li>
               <li><Link to="/sedes" className="hover:text-green-500 transition-colors">Sedes</Link></li>
             </ul>
           </div>
