@@ -12,6 +12,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
+  { id: 2, url: "/img/banner-limites.jpeg", alt: "Conoce nuestra cartilla limites con amor", href: "/docs/cartilla-limites-con-amor.pdf" },
   { id: 3, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 4, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo" },
   { id: 5, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
@@ -57,12 +58,17 @@ const Home = () => {
                 const handleBannerClick = () => {
                   if (!imagen.href) return;
 
+                  if (imagen.href.toLowerCase().endsWith('.pdf')) {
+                    window.open(imagen.href, '_blank', 'noopener,noreferrer');
+                    return;
+                  }
+
                   if (imagen.href.startsWith('/')) {
                     window.location.href = imagen.href;
                     return;
                   }
 
-                  window.open(imagen.href, '_blank');
+                  window.open(imagen.href, '_blank', 'noopener,noreferrer');
                 };
                 const bannerContent = (
                   <div className="relative w-full h-[280px] md:h-[480px] -m-4">
@@ -156,12 +162,12 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-green-900 mb-6">Próximos Eventos</h2>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-600">
-                <p className="text-sm text-blue-700 font-bold">4 SEP, 2026</p>
-                <h4 className="font-bold">Ciencia y tecnologìa - día de cometas</h4>
+                <p className="text-sm text-blue-700 font-bold">25 SEP, 2026</p>
+                <h4 className="font-bold">Entrega de boletines tercer periodo</h4>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-600">
-                <p className="text-sm text-green-700 font-bold">11 SEP, 2026</p>
-                <h4 className="font-bold">Día de amor y amistad 11°</h4>
+                <p className="text-sm text-green-700 font-bold">27 SEP, 2026</p>
+                <h4 className="font-bold">Inicio de semana cultural°</h4>
               </div>
             </div>
           </div>
