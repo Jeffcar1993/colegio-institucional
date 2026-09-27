@@ -12,6 +12,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
+  { id: 1, url: "/img/semana-cultural.jpeg", alt: "Semana cultural 2026", href: "/docs/semana-cultural-2026.pdf" },
   { id: 2, url: "/img/banner-limites.jpeg", alt: "Conoce nuestra cartilla limites con amor", href: "/docs/cartilla-limites-con-amor.pdf" },
   { id: 3, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 4, url: "/img/Blogs-educacion.png", alt: "Te invitamos a conocer nuestro Blog educativo" },
