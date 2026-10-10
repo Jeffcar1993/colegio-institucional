@@ -12,7 +12,6 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
-  { id: 1, url: "/img/semana-cultural.jpeg", alt: "Semana cultural 2026", href: "/docs/semana-cultural-2026.pdf" },
   { id: 2, url: "/img/banner-limites.jpeg", alt: "Conoce nuestra cartilla limites con amor", href: "/docs/cartilla-limites-con-amor.pdf" },
   { id: 3, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 5, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
@@ -100,33 +99,40 @@ const Home = () => {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Gobierno Escolar 2026</h2>
-            <div className="h-1 w-20 bg-green-600 mx-auto mt-4" />
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Mejores Icfes 2026</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <article className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <article>
               <img
-                src="/img/Juan.jpeg"
-                alt="Personero 2026 Juan Diego Urrego"
-                className="w-full h-44 sm:h-52 md:h-60 object-contain bg-slate-50"
+                src="/img/Fabian%20Zarate.png"
+                alt="Fabian Zarate"
+                className="w-full h-64 object-contain bg-slate-50"
               />
-              <div className="p-6 text-center">
-                <p className="text-sm font-semibold text-green-700 uppercase tracking-wide">Personero 2026</p>
-                <h3 className="text-2xl font-bold text-slate-900 mt-2">Juan Diego Urrego</h3>
-              </div>
             </article>
 
-            <article className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <article>
               <img
-                src="/img/Danna.jpeg"
-                alt="Contralora 2026 Danna Michel Fonseca Sanchez"
-                className="w-full h-44 sm:h-52 md:h-60 object-contain bg-slate-50"
+                src="/img/juan%20diego.png"
+                alt="Juan Diego"
+                className="w-full h-64 object-contain bg-slate-50"
               />
-              <div className="p-6 text-center">
-                <p className="text-sm font-semibold text-blue-700 uppercase tracking-wide">Contralora 2026</p>
-                <h3 className="text-2xl font-bold text-slate-900 mt-2">Danna Michel Fonseca Sanchez</h3>
-              </div>
+            </article>
+
+            <article>
+              <img
+                src="/img/sierra.png"
+                alt="Sierra"
+                className="w-full h-64 object-contain bg-slate-50"
+              />
+            </article>
+
+            <article>
+              <img
+                src="/img/duvan.png"
+                alt="Duvan"
+                className="w-full h-64 object-contain bg-slate-50"
+              />
             </article>
           </div>
         </div>
