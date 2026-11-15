@@ -47,6 +47,35 @@ const inicializarTablaComunicados = async (): Promise<void> => {
   await pool.query(`ALTER TABLE comunicados ADD COLUMN IF NOT EXISTS contenido_html TEXT`);
 };
 
+const inicializarTablasEntreLetras = async (): Promise<void> => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS cuentos (
+      id SERIAL PRIMARY KEY,
+      titulo TEXT,
+      autor TEXT,
+      categoria TEXT DEFAULT 'Narrativo',
+      contenido TEXT NOT NULL,
+      imagen_url TEXT,
+      fecha_creacion TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`ALTER TABLE cuentos ADD COLUMN IF NOT EXISTS autor TEXT`);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS coplas (
+      id SERIAL PRIMARY KEY,
+      titulo TEXT,
+      autor TEXT,
+      descripcion TEXT,
+      imagen_url TEXT,
+      fecha_creacion TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`ALTER TABLE coplas ADD COLUMN IF NOT EXISTS autor TEXT`);
+};
+
 // --- RELAY DE EMISORA (PLAN B) ---
 app.get('/api/radio/live', async (_req: Request, res: Response) => {
   const sourceUrl = process.env.RADIO_SOURCE_URL;
@@ -423,7 +452,87 @@ app.delete('/api/blog/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Error al eliminar entrada" }); }
 });
 
-// --- 8. BUSCADOR CHATBOT UNIFICADO ---
+// --- 8. RUTAS DE CUENTOS Y COPLAS (ENTRE LETRAS) ---
+app.get('/api/cuentos', async (_req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM cuentos ORDER BY fecha_creacion DESC');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener cuentos' });
+  }
+});
+
+app.post('/api/cuentos', async (req, res) => {
+  const { titulo, autor, categoria, contenido, imagen_url } = req.body;
+
+  if (!contenido) {
+    return res.status(400).json({ error: 'Falta el contenido del cuento' });
+  }
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO cuentos (titulo, autor, categoria, contenido, imagen_url) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [
+        titulo?.trim() || 'Cuento sin título',
+        autor?.trim() || 'Autor anónimo',
+        categoria || 'Narrativo',
+        contenido,
+        imagen_url || null,
+      ]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear cuento' });
+  }
+});
+
+app.delete('/api/cuentos/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM cuentos WHERE id = $1', [req.params.id]);
+    res.json({ message: 'Cuento eliminado' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar cuento' });
+  }
+});
+
+app.get('/api/coplas', async (_req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM coplas ORDER BY fecha_creacion DESC');
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener coplas' });
+  }
+});
+
+app.post('/api/coplas', async (req, res) => {
+  const { titulo, autor, descripcion, imagen_url } = req.body;
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO coplas (titulo, autor, descripcion, imagen_url) VALUES ($1, $2, $3, $4) RETURNING *',
+      [
+        titulo?.trim() || 'Copla sin título',
+        autor?.trim() || 'Autor anónimo',
+        descripcion || '',
+        imagen_url || null,
+      ]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear copla' });
+  }
+});
+
+app.delete('/api/coplas/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM coplas WHERE id = $1', [req.params.id]);
+    res.json({ message: 'Copla eliminada' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar copla' });
+  }
+});
+
+// --- 9. BUSCADOR CHATBOT UNIFICADO ---
 app.get('/api/chatbot/buscar', async (req: Request, res: Response) => {
   const { q } = req.query;
   
@@ -495,6 +604,7 @@ const iniciarServidor = async () => {
   try {
     await inicializarTablasVisitas();
     await inicializarTablaComunicados();
+    await inicializarTablasEntreLetras();
     app.listen(PORT, () => {
       console.log(`🚀 Servidor listo en puerto ${PORT}`);
     });

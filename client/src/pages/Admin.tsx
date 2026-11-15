@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import API_BASE_URL from "@/config/api";
 
-// --- INTERFACES ---
-
 interface Mensaje {
   id: number;
   nombre: string;
@@ -36,7 +34,7 @@ interface Album {
   cantidad_fotos?: number;
 }
 
-interface BlogPost {
+interface Cuento {
   id: number;
   titulo: string;
   categoria: string;
@@ -45,25 +43,42 @@ interface BlogPost {
   fecha_creacion: string;
 }
 
+interface Copla {
+  id: number;
+  titulo?: string;
+  autor?: string;
+  descripcion?: string;
+  imagen_url?: string;
+  fecha_creacion: string;
+}
+
 export default function AdminDashboard() {
-  // --- ESTADOS ---
   const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [comunicados, setComunicados] = useState<Comunicado[]>([]);
   const [albumes, setAlbumes] = useState<Album[]>([]);
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
-  
+  const [cuentos, setCuentos] = useState<Cuento[]>([]);
+  const [coplas, setCoplas] = useState<Copla[]>([]);
+
   const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem("admin_session") === "true");
   const [password, setPassword] = useState("");
   const [publicando, setPublicando] = useState(false);
   const [loading, setLoading] = useState(false);
   const [creadoAlbum, setCreadoAlbum] = useState(false);
 
-  const [publicandoBlog, setPublicandoBlog] = useState(false);
-  const [nuevoBlog, setNuevoBlog] = useState({
+  const [publicandoCuento, setPublicandoCuento] = useState(false);
+  const [publicandoCopla, setPublicandoCopla] = useState(false);
+  const [nuevoCuento, setNuevoCuento] = useState({
     titulo: "",
-    categoria: "Noticias",
+    autor: "",
+    categoria: "Narrativo",
     contenido: "",
-    imagen_url: ""
+    imagen_url: "",
+  });
+  const [nuevaCopla, setNuevaCopla] = useState({
+    titulo: "",
+    autor: "",
+    descripcion: "",
+    imagen_url: "",
   });
 
   const [selectedMensaje, setSelectedMensaje] = useState<Mensaje | null>(null);
@@ -75,29 +90,33 @@ export default function AdminDashboard() {
     categoria: "Académico",
     importancia: "Normal",
     resumen: "",
-    adjunto_url: ""
+    adjunto_url: "",
   });
 
   const ADMIN_PASSWORD = "IED_Kennedy_2026";
 
-  // --- FUNCIONES DE CARGA Y ELIMINACIÓN ---
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [resMsg, resCom, resAlb, resBlg] = await Promise.all([
+      const [resMsg, resCom, resAlb, resCuentos, resCoplas] = await Promise.all([
         fetch(`${API_BASE_URL}/api/contacto`),
         fetch(`${API_BASE_URL}/api/comunicados`),
         fetch(`${API_BASE_URL}/api/albumes`),
-        fetch(`${API_BASE_URL}/api/blog`)
+        fetch(`${API_BASE_URL}/api/cuentos`),
+        fetch(`${API_BASE_URL}/api/coplas`),
       ]);
+
       const dataMsg = await resMsg.json();
       const dataCom = await resCom.json();
       const dataAlb = await resAlb.json();
-      const dataBlg = await resBlg.json();
+      const dataCuentos = await resCuentos.json();
+      const dataCoplas = await resCoplas.json();
+
       setMensajes(Array.isArray(dataMsg) ? dataMsg : []);
       setComunicados(Array.isArray(dataCom) ? dataCom : []);
       setAlbumes(Array.isArray(dataAlb) ? dataAlb : []);
-      setBlogs(Array.isArray(dataBlg) ? dataBlg : []);
+      setCuentos(Array.isArray(dataCuentos) ? dataCuentos : []);
+      setCoplas(Array.isArray(dataCoplas) ? dataCoplas : []);
     } catch {
       console.error("Error al conectar con la base de datos.");
     } finally {
@@ -108,7 +127,7 @@ export default function AdminDashboard() {
   const eliminarElemento = async (tipo: string, id: number) => {
     if (!confirm("¿Estás seguro de que deseas eliminar este registro?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/api/${tipo}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/api/${tipo}/${id}`, { method: "DELETE" });
       if (res.ok) fetchData();
     } catch {
       alert("No se pudo eliminar");
@@ -116,12 +135,11 @@ export default function AdminDashboard() {
   };
 
   const handleEliminarYCerrar = async (id: number) => {
-    await eliminarElemento('contacto', id);
+    await eliminarElemento("contacto", id);
     setOpenMensaje(false);
     setSelectedMensaje(null);
   };
 
-  // --- GESTIÓN DE GALERÍA (CLOUDINARY) ---
   const manejarSubidaFoto = (albumId: number) => {
     interface CloudinaryResult {
       event?: string;
@@ -135,25 +153,28 @@ export default function AdminDashboard() {
         createUploadWidget: (config: object, callback: (error: object | null, result: CloudinaryResult | undefined) => void) => CloudinaryWidget;
       };
     }
-    // @ts-expect-error Cloudinary widget is loaded dynamically via script
-      const widget = (window as CloudinaryWindow).cloudinary.createUploadWidget({
-        cloudName: 'dyknrzw2o', // <--- ESTO ES VITAL
-        uploadPreset: 'ied_kennedy_preset', // Asegúrate que sea el mismo que creaste
-        sources: ['local', 'url', 'camera'],
-        multiple: true,
-        language: 'es',
-      }, async (error: object | null, result: CloudinaryResult | undefined) => {
-      if (!error && result && result.event === "success" && result.info?.secure_url) {
-        // Agregar la foto al álbum
-        await fetch(`${API_BASE_URL}/api/albumes/${albumId}/fotos`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: result.info.secure_url })
-        });
 
-        fetchData();
+    // @ts-expect-error Cloudinary widget is loaded dynamically via script
+    const widget = (window as CloudinaryWindow).cloudinary.createUploadWidget(
+      {
+        cloudName: "dyknrzw2o",
+        uploadPreset: "ied_kennedy_preset",
+        sources: ["local", "url", "camera"],
+        multiple: true,
+        language: "es",
+      },
+      async (error: object | null, result: CloudinaryResult | undefined) => {
+        if (!error && result && result.event === "success" && result.info?.secure_url) {
+          await fetch(`${API_BASE_URL}/api/albumes/${albumId}/fotos`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: result.info.secure_url }),
+          });
+
+          fetchData();
+        }
       }
-    });
+    );
     widget.open();
   };
 
@@ -178,7 +199,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- AUTENTICACIÓN Y PUBLICACIÓN ---
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
@@ -209,26 +229,69 @@ export default function AdminDashboard() {
     }
   };
 
-  const handlePublicarBlog = async (e: React.FormEvent) => {
+  const handlePublicarCuento = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPublicandoBlog(true);
+    setPublicandoCuento(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/blog`, {
+      const res = await fetch(`${API_BASE_URL}/api/cuentos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoBlog),
+        body: JSON.stringify({
+          titulo: nuevoCuento.titulo || "Cuento sin título",
+          autor: nuevoCuento.autor || "Autor anónimo",
+          categoria: nuevoCuento.categoria,
+          contenido: nuevoCuento.contenido,
+          imagen_url: nuevoCuento.imagen_url || null,
+        }),
       });
       if (res.ok) {
-        setNuevoBlog({ titulo: "", categoria: "Noticias", contenido: "", imagen_url: "" });
+        setNuevoCuento({ titulo: "", autor: "", categoria: "Narrativo", contenido: "", imagen_url: "" });
         fetchData();
-        alert("Entrada de blog publicada");
+        alert("Cuento publicado");
       }
     } finally {
-      setPublicandoBlog(false);
+      setPublicandoCuento(false);
     }
   };
 
-  useEffect(() => { if (isAuthenticated) fetchData(); }, [isAuthenticated]);
+  const manejarArchivoCopla = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setNuevaCopla((prev) => ({ ...prev, imagen_url: String(reader.result ?? "") }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handlePublicarCopla = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPublicandoCopla(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/coplas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: nuevaCopla.titulo || "Copla sin título",
+          autor: nuevaCopla.autor || "Autor anónimo",
+          descripcion: nuevaCopla.descripcion,
+          imagen_url: nuevaCopla.imagen_url || null,
+        }),
+      });
+      if (res.ok) {
+        setNuevaCopla({ titulo: "", autor: "", descripcion: "", imagen_url: "" });
+        fetchData();
+        alert("Copla publicada");
+      }
+    } finally {
+      setPublicandoCopla(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) fetchData();
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return (
@@ -266,11 +329,10 @@ export default function AdminDashboard() {
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 gap-2">
           <TabsTrigger value="mensajes" className="cursor-pointer">Mensajes ({mensajes.length})</TabsTrigger>
           <TabsTrigger value="publicar" className="cursor-pointer">📢 Comunicados</TabsTrigger>
-          <TabsTrigger value="blog" className="cursor-pointer">✍️ Blog</TabsTrigger>
+          <TabsTrigger value="blog" className="cursor-pointer">📚 Entre Letras</TabsTrigger>
           <TabsTrigger value="galeria" className="cursor-pointer">🖼️ Galería</TabsTrigger>
         </TabsList>
 
-        {/* CONTENIDO: MENSAJES */}
         <TabsContent value="mensajes">
           <Card>
             <CardContent className="pt-6">
@@ -289,7 +351,7 @@ export default function AdminDashboard() {
                       <TableCell>{msg.asunto}</TableCell>
                       <TableCell className="flex items-center gap-2">
                         <Button variant="ghost" className="cursor-pointer" onClick={() => { setSelectedMensaje(msg); setOpenMensaje(true); }} title="Ver mensaje"><Eye className="h-4 w-4" /></Button>
-                        <Button variant="ghost" className="text-red-500 cursor-pointer" onClick={() => eliminarElemento('contacto', msg.id)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" className="text-red-500 cursor-pointer" onClick={() => eliminarElemento("contacto", msg.id)}><Trash2 className="h-4 w-4" /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -299,72 +361,105 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
 
-        {/* CONTENIDO: COMUNICADOS */}
         <TabsContent value="publicar">
-           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             <Card className="xl:col-span-2 shadow-md border-t-4 border-t-green-600">
               <CardHeader><CardTitle className="flex items-center gap-2"><Send className="h-5 w-5" /> Redactar</CardTitle></CardHeader>
               <CardContent>
                 <form onSubmit={handlePublicar} className="space-y-4">
-                  <Input placeholder="Título" value={nuevoComunicado.titulo} onChange={(e) => setNuevoComunicado({...nuevoComunicado, titulo: e.target.value})} required />
+                  <Input placeholder="Título" value={nuevoComunicado.titulo} onChange={(e) => setNuevoComunicado({ ...nuevoComunicado, titulo: e.target.value })} required />
                   <div className="grid grid-cols-2 gap-4">
-                    <Input placeholder="Categoría" value={nuevoComunicado.categoria} onChange={(e) => setNuevoComunicado({...nuevoComunicado, categoria: e.target.value})} />
-                    <Input placeholder="Enlace Adjunto" value={nuevoComunicado.adjunto_url} onChange={(e) => setNuevoComunicado({...nuevoComunicado, adjunto_url: e.target.value})} />
+                    <Input placeholder="Categoría" value={nuevoComunicado.categoria} onChange={(e) => setNuevoComunicado({ ...nuevoComunicado, categoria: e.target.value })} />
+                    <Input placeholder="Enlace Adjunto" value={nuevoComunicado.adjunto_url} onChange={(e) => setNuevoComunicado({ ...nuevoComunicado, adjunto_url: e.target.value })} />
                   </div>
-                  <Textarea placeholder="Contenido..." value={nuevoComunicado.resumen} onChange={(e) => setNuevoComunicado({...nuevoComunicado, resumen: e.target.value})} required className="min-h-[300px]" />
+                  <Textarea placeholder="Contenido..." value={nuevoComunicado.resumen} onChange={(e) => setNuevoComunicado({ ...nuevoComunicado, resumen: e.target.value })} required className="min-h-[300px]" />
                   <Button type="submit" disabled={publicando} className="w-full bg-green-700 text-white font-bold">{publicando ? <Loader2 className="animate-spin" /> : "Publicar"}</Button>
                 </form>
               </CardContent>
             </Card>
             <Card className="p-4 bg-slate-50">
-                <h3 className="font-bold mb-4">Recientes</h3>
-                {comunicados.map(c => (
-                  <div key={c.id} className="flex justify-between items-center bg-white p-2 mb-2 rounded border">
-                    <span className="text-sm truncate">{c.titulo}</span>
-                    <Button variant="ghost" size="sm" onClick={() => eliminarElemento('comunicados', c.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
-                  </div>
-                ))}
-            </Card>
-           </div>
-        </TabsContent>
-
-        {/* CONTENIDO: BLOG */}
-        <TabsContent value="blog">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <Card className="xl:col-span-2 shadow-md border-t-4 border-t-purple-600">
-              <CardHeader><CardTitle className="flex items-center gap-2"><Send className="h-5 w-5" /> Nueva Entrada</CardTitle></CardHeader>
-              <CardContent>
-                <form onSubmit={handlePublicarBlog} className="space-y-4">
-                  <Input placeholder="Título" value={nuevoBlog.titulo} onChange={(e) => setNuevoBlog({...nuevoBlog, titulo: e.target.value})} required />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input placeholder="Categoría (ej: Noticias, Eventos...)" value={nuevoBlog.categoria} onChange={(e) => setNuevoBlog({...nuevoBlog, categoria: e.target.value})} />
-                    <Input placeholder="URL de imagen de portada (opcional)" value={nuevoBlog.imagen_url} onChange={(e) => setNuevoBlog({...nuevoBlog, imagen_url: e.target.value})} />
-                  </div>
-                  <Textarea placeholder="Contenido de la entrada..." value={nuevoBlog.contenido} onChange={(e) => setNuevoBlog({...nuevoBlog, contenido: e.target.value})} required className="min-h-[300px]" />
-                  <Button type="submit" disabled={publicandoBlog} className="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold">{publicandoBlog ? <Loader2 className="animate-spin" /> : "Publicar Entrada"}</Button>
-                </form>
-              </CardContent>
-            </Card>
-            <Card className="p-4 bg-slate-50">
-              <h3 className="font-bold mb-4">Entradas Recientes</h3>
-              {blogs.map(b => (
-                <div key={b.id} className="flex justify-between items-center bg-white p-2 mb-2 rounded border">
-                  <span className="text-sm truncate">{b.titulo}</span>
-                  <Button variant="ghost" size="sm" onClick={() => eliminarElemento('blog', b.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
+              <h3 className="font-bold mb-4">Recientes</h3>
+              {comunicados.map((c) => (
+                <div key={c.id} className="flex justify-between items-center bg-white p-2 mb-2 rounded border">
+                  <span className="text-sm truncate">{c.titulo}</span>
+                  <Button variant="ghost" size="sm" onClick={() => eliminarElemento("comunicados", c.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
                 </div>
               ))}
-              {blogs.length === 0 && <p className="text-xs text-slate-400 italic">No hay entradas publicadas.</p>}
             </Card>
           </div>
         </TabsContent>
 
-        {/* CONTENIDO: GALERÍA */}
+        <TabsContent value="blog">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-8">
+            <Card className="shadow-md border-t-4 border-t-emerald-600">
+              <CardHeader><CardTitle className="flex items-center gap-2">✍️ Nuevo Cuento</CardTitle></CardHeader>
+              <CardContent>
+                <form onSubmit={handlePublicarCuento} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input placeholder="Título (opcional)" value={nuevoCuento.titulo} onChange={(e) => setNuevoCuento({ ...nuevoCuento, titulo: e.target.value })} />
+                    <Input placeholder="Autor (opcional)" value={nuevoCuento.autor} onChange={(e) => setNuevoCuento({ ...nuevoCuento, autor: e.target.value })} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input placeholder="Categoría" value={nuevoCuento.categoria} onChange={(e) => setNuevoCuento({ ...nuevoCuento, categoria: e.target.value })} />
+                    <Input placeholder="URL de imagen (opcional)" value={nuevoCuento.imagen_url} onChange={(e) => setNuevoCuento({ ...nuevoCuento, imagen_url: e.target.value })} />
+                  </div>
+                  <Textarea placeholder="Escribe el cuento..." value={nuevoCuento.contenido} onChange={(e) => setNuevoCuento({ ...nuevoCuento, contenido: e.target.value })} required className="min-h-[260px]" />
+                  <Button type="submit" disabled={publicandoCuento} className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold">{publicandoCuento ? <Loader2 className="animate-spin" /> : "Publicar Cuento"}</Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card className="p-4 bg-slate-50">
+              <h3 className="font-bold mb-4">Cuentos recientes</h3>
+              {cuentos.map((cuento) => (
+                <div key={cuento.id} className="flex justify-between items-center bg-white p-2 mb-2 rounded border">
+                  <span className="text-sm truncate">{cuento.titulo}</span>
+                  <Button variant="ghost" size="sm" onClick={() => eliminarElemento("cuentos", cuento.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
+                </div>
+              ))}
+              {cuentos.length === 0 && <p className="text-xs text-slate-400 italic">No hay cuentos publicados.</p>}
+            </Card>
+
+            <Card className="shadow-md border-t-4 border-t-amber-500">
+              <CardHeader><CardTitle className="flex items-center gap-2">🎵 Nueva Copla</CardTitle></CardHeader>
+              <CardContent>
+                <form onSubmit={handlePublicarCopla} className="space-y-4">
+                  <Input placeholder="Título de la copla (opcional)" value={nuevaCopla.titulo} onChange={(e) => setNuevaCopla({ ...nuevaCopla, titulo: e.target.value })} />
+                  <Input placeholder="Autor (opcional)" value={nuevaCopla.autor} onChange={(e) => setNuevaCopla({ ...nuevaCopla, autor: e.target.value })} />
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Seleccionar imagen de la copla</label>
+                    <Input type="file" accept="image/*" onChange={manejarArchivoCopla} className="file:mr-2 file:rounded-full file:border-0 file:bg-amber-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-amber-700" />
+                    {nuevaCopla.imagen_url && (
+                      <img src={nuevaCopla.imagen_url} alt="Previsualización de la copla" className="h-32 w-full object-cover rounded-xl border border-amber-200" />
+                    )}
+                  </div>
+
+                  <Textarea placeholder="Descripción o texto breve de la copla" value={nuevaCopla.descripcion} onChange={(e) => setNuevaCopla({ ...nuevaCopla, descripcion: e.target.value })} className="min-h-[160px]" />
+                  <Button type="submit" disabled={publicandoCopla} className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold">{publicandoCopla ? <Loader2 className="animate-spin" /> : "Publicar Copla"}</Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card className="p-4 bg-slate-50">
+              <h3 className="font-bold mb-4">Coplas recientes</h3>
+              {coplas.map((copla) => (
+                <div key={copla.id} className="flex justify-between items-center bg-white p-2 mb-2 rounded border">
+                  <span className="text-sm truncate">{copla.titulo}</span>
+                  <Button variant="ghost" size="sm" onClick={() => eliminarElemento("coplas", copla.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
+                </div>
+              ))}
+              {coplas.length === 0 && <p className="text-xs text-slate-400 italic">No hay coplas publicadas.</p>}
+            </Card>
+          </div>
+        </TabsContent>
+
         <TabsContent value="galeria">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <Card className="border-t-4 border-t-blue-500">
               <CardHeader><CardTitle>Nuevo Álbum</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-                <Input placeholder="Nombre del álbum" value={nuevoAlbum.titulo} onChange={(e) => setNuevoAlbum({...nuevoAlbum, titulo: e.target.value})} />
+                <Input placeholder="Nombre del álbum" value={nuevoAlbum.titulo} onChange={(e) => setNuevoAlbum({ ...nuevoAlbum, titulo: e.target.value })} />
                 <Button onClick={handleCrearAlbum} disabled={creadoAlbum} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2"><Plus className="mr-2" /> {creadoAlbum ? "Creando..." : "Crear Carpeta"}</Button>
               </CardContent>
             </Card>
@@ -381,7 +476,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex gap-2">
                         <Button onClick={() => manejarSubidaFoto(alb.id)} className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2"><ImageIcon className="mr-2 h-4 w-4" /> Subir Fotos</Button>
-                        <Button variant="outline" onClick={() => eliminarElemento('albumes', alb.id)} className="text-red-500 border-red-100"><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="outline" onClick={() => eliminarElemento("albumes", alb.id)} className="text-red-500 border-red-100"><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </div>
                   ))}
@@ -394,23 +489,23 @@ export default function AdminDashboard() {
 
       {selectedMensaje && (
         <Dialog open={openMensaje} onOpenChange={setOpenMensaje}>
-            <DialogContent className="bg-white text-black">
-              <DialogHeader>
-                <DialogTitle>{selectedMensaje.asunto}</DialogTitle>
-                <DialogDescription className="text-sm text-black/80">
-                  De: {selectedMensaje.nombre}
-                  <div className="text-xs text-slate-600">{selectedMensaje.correo}</div>
-                  {selectedMensaje.fecha_envio ? <div className="mt-1">{new Date(selectedMensaje.fecha_envio).toLocaleString()}</div> : null}
-                </DialogDescription>
-              </DialogHeader>
+          <DialogContent className="bg-white text-black">
+            <DialogHeader>
+              <DialogTitle>{selectedMensaje.asunto}</DialogTitle>
+              <DialogDescription className="text-sm text-black/80">
+                De: {selectedMensaje.nombre}
+                <div className="text-xs text-slate-600">{selectedMensaje.correo}</div>
+                {selectedMensaje.fecha_envio ? <div className="mt-1">{new Date(selectedMensaje.fecha_envio).toLocaleString()}</div> : null}
+              </DialogDescription>
+            </DialogHeader>
 
-              <div className="mt-4 whitespace-pre-wrap text-black">{selectedMensaje.mensaje}</div>
+            <div className="mt-4 whitespace-pre-wrap text-black">{selectedMensaje.mensaje}</div>
 
-              <DialogFooter className="mt-6 flex justify-end gap-2">
-                <Button variant="destructive" onClick={() => handleEliminarYCerrar(selectedMensaje.id)} className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">Eliminar</Button>
-                <Button className="cursor-pointer" onClick={() => { setOpenMensaje(false); setSelectedMensaje(null); }}>Cerrar</Button>
-              </DialogFooter>
-            </DialogContent>
+            <DialogFooter className="mt-6 flex justify-end gap-2">
+              <Button variant="destructive" onClick={() => handleEliminarYCerrar(selectedMensaje.id)} className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">Eliminar</Button>
+              <Button className="cursor-pointer" onClick={() => { setOpenMensaje(false); setSelectedMensaje(null); }}>Cerrar</Button>
+            </DialogFooter>
+          </DialogContent>
         </Dialog>
       )}
     </div>
