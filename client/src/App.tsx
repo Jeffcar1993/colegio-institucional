@@ -67,6 +67,11 @@ function App() {
                 <Blog />
               </Suspense>
             } />
+            <Route path="/entre-letras/:section" element={
+              <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500"><Loader2 className="h-8 w-8 animate-spin text-green-700 mb-4" /><p>Cargando Entre Letras...</p></div>}>
+                <Blog />
+              </Suspense>
+            } />
             <Route path="/blog" element={<Navigate to="/entre-letras" replace />} />
           </Routes>
         </main>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Mail, MapPin, Phone, Youtube } from 'lucide-react';
 import escudo from '../assets/escudo.jpeg';
 import API_BASE_URL from '@/config/api';
 
@@ -12,6 +12,35 @@ const Footer = () => {
     let activo = true;
 
     const cargarContador = async () => {
+      const storageKey = 'ied_kennedy_visita_registrada';
+
+      const yaSeRegistro = sessionStorage.getItem(storageKey) === 'true';
+
+      if (yaSeRegistro) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/visitas`, {
+            method: 'GET',
+          });
+
+          if (!response.ok) {
+            throw new Error('No fue posible cargar el contador de visitas');
+          }
+
+          const data = await response.json();
+          const total = Number(data?.total || 0);
+
+          if (activo) {
+            setCantidadVisitantes(total);
+          }
+        } catch {
+          if (activo) {
+            setCantidadVisitantes(null);
+          }
+        }
+
+        return;
+      }
+
       try {
         const response = await fetch(`${API_BASE_URL}/api/visitas/registrar`, {
           method: 'POST',
@@ -26,6 +55,7 @@ const Footer = () => {
 
         if (activo) {
           setCantidadVisitantes(total);
+          sessionStorage.setItem(storageKey, 'true');
         }
       } catch {
         if (activo) {
@@ -106,6 +136,9 @@ const Footer = () => {
             <div className="flex gap-4">
               <a href="https://www.facebook.com/iekennedy.san.pedro.de.jagua" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
                 <Facebook size={20} />
+              </a>
+              <a href="https://www.youtube.com/@I.E.R.DKENNEDYSPJ" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
+                <Youtube size={20} />
               </a>
               <a href="https://www.instagram.com/iikenedyy_?igsh=aHM1bWw4b3I0YW1s&igsi=aHM1bWw4b3I0YW1s" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-slate-800 p-2.5 rounded-xl hover:bg-green-600 hover:text-white transition-all duration-300">
                 <Instagram size={20} />

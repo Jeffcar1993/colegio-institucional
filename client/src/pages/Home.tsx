@@ -12,6 +12,7 @@ import React from "react";
 
 // Configura aquí tus imágenes informativas
 const imagenesCarrusel: { id: number; url: string; alt: string; href?: string }[] = [
+  { id: 1, url: "/img/cuentos1.jpeg", alt: "Escritos estudiantiles", href: "/blog" },
   { id: 2, url: "/img/banner-limites.jpeg", alt: "Conoce nuestra cartilla limites con amor", href: "/docs/cartilla-limites-con-amor.pdf" },
   { id: 3, url: "/img/emisora.png", alt: "Escuchanos en vivo", href: "/emisora" },
   { id: 5, url: "/img/ban-com.png", alt: "Revisa la seccion de comunicados", href: "/comunicados" },
