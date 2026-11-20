@@ -235,12 +235,41 @@ export default function EntreLetras() {
             coplas.map((copla) => (
               <article key={copla.id} className="group overflow-hidden rounded-3xl border border-amber-200 bg-white shadow-sm hover:shadow-md transition-all">
                 {copla.imagen_url && (
-                  <img
-                    src={copla.imagen_url}
-                    alt={copla.titulo || "Copla"}
-                    className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button
+                        type="button"
+                        className="block h-56 w-full cursor-zoom-in overflow-hidden border-0 bg-slate-100 p-0"
+                        aria-label={`Ampliar imagen de ${copla.titulo || "Copla sin título"}`}
+                      >
+                        <img
+                          src={copla.imagen_url}
+                          alt={copla.titulo || "Copla"}
+                          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="w-[95vw] sm:max-w-5xl h-[90vh] flex flex-col p-0 overflow-hidden border-none rounded-xl">
+                      <DialogHeader className="px-5 py-4 pr-14 border-b border-slate-200">
+                        <DialogTitle className="text-xl font-bold text-slate-900">
+                          {copla.titulo || "Copla sin título"}
+                        </DialogTitle>
+                        {copla.autor && (
+                          <DialogDescription className="text-amber-700 font-medium">
+                            {copla.autor}
+                          </DialogDescription>
+                        )}
+                      </DialogHeader>
+                      <div className="flex-1 min-h-0 flex items-center justify-center bg-slate-950 p-3 sm:p-6">
+                        <img
+                          src={copla.imagen_url}
+                          alt={copla.titulo || "Copla"}
+                          className="max-h-full max-w-full object-contain rounded-lg"
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 )}
                 <div className="p-5">
                   <p className="text-[11px] uppercase tracking-[0.14em] text-amber-600 font-semibold">
@@ -338,20 +367,49 @@ export default function EntreLetras() {
                   }}
                 >
                   {copla.imagen_url && (
-                    <img
-                      src={copla.imagen_url}
-                      alt={copla.titulo || "Copla"}
-                      className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button
+                          type="button"
+                          className="block h-56 w-full cursor-zoom-in overflow-hidden border-0 bg-slate-100 p-0"
+                          aria-label={`Ampliar imagen de ${copla.titulo || "Copla sin título"}`}
+                        >
+                          <img
+                            src={copla.imagen_url}
+                            alt={copla.titulo || "Copla"}
+                            className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="w-[95vw] sm:max-w-5xl h-[90vh] flex flex-col p-0 overflow-hidden border-none rounded-xl">
+                        <DialogHeader className="px-5 py-4 pr-14 border-b border-slate-200">
+                          <DialogTitle className="text-xl font-bold text-slate-900">
+                            {copla.titulo || "Copla sin título"}
+                          </DialogTitle>
+                          {copla.autor && (
+                            <DialogDescription className="text-amber-700 font-medium">
+                              {copla.autor}
+                            </DialogDescription>
+                          )}
+                        </DialogHeader>
+                        <div className="flex-1 min-h-0 flex items-center justify-center bg-slate-950 p-3 sm:p-6">
+                          <img
+                            src={copla.imagen_url}
+                            alt={copla.titulo || "Copla"}
+                            className="max-h-full max-w-full object-contain rounded-lg"
+                          />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   )}
-                  <div className="p-4">
+                  <div className="p-5">
                     <p className="text-[11px] uppercase tracking-[0.14em] text-amber-600 font-semibold">
                       {formatDate(copla.fecha_creacion)}
                     </p>
-                    <h3 className="mt-2 text-lg font-bold text-slate-800">{copla.titulo || "Copla sin título"}</h3>
-                    {copla.autor && <p className="mt-1 text-sm font-medium text-amber-700">{copla.autor}</p>}
-                    {copla.descripcion && <p className="mt-2 text-sm text-slate-600 leading-relaxed">{copla.descripcion}</p>}
+                    <h3 className="mt-3 text-xl font-bold text-slate-800">{copla.titulo || "Copla sin título"}</h3>
+                    {copla.autor && <p className="mt-2 text-sm font-medium text-amber-700">{copla.autor}</p>}
+                    {copla.descripcion && <p className="mt-3 text-sm text-slate-600 leading-relaxed">{copla.descripcion}</p>}
                   </div>
                 </article>
               ))

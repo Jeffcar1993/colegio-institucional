@@ -4,12 +4,21 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { Readable } from 'stream';
 import { pool } from './db.js';
+import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
 
+if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+}
+
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 const VISIT_COUNTER_KEY = 'website_visits';
 
@@ -482,6 +491,7 @@ app.post('/api/cuentos', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    console.error('Error al crear cuento:', error);
     res.status(500).json({ error: 'Error al crear cuento' });
   }
 });
@@ -519,6 +529,7 @@ app.post('/api/coplas', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    console.error('Error al crear copla:', error);
     res.status(500).json({ error: 'Error al crear copla' });
   }
 });
@@ -615,3 +626,29 @@ const iniciarServidor = async () => {
 };
 
 iniciarServidor();
+
+// Nueva ruta para subir imágenes de coplas
+app.post('/api/coplas/subir-imagen', async (req: Request, res: Response) => {
+  const { imagen_base64 } = req.body;
+
+  if (!imagen_base64 || typeof imagen_base64 !== 'string') {
+    return res.status(400).json({ error: 'No se recibió ninguna imagen' });
+  }
+
+  if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    return res.status(503).json({ error: 'Cloudinary no está configurado en el servidor' });
+  }
+
+  try {
+    const resultado = await cloudinary.uploader.upload(imagen_base64, {
+      folder: 'coplas',
+      resource_type: 'image',
+      overwrite: false,
+    });
+
+    return res.status(201).json({ imagen_url: resultado.secure_url });
+  } catch (error) {
+    console.error('Error al subir imagen de copla a Cloudinary:', error);
+    return res.status(500).json({ error: 'No se pudo subir la imagen a Cloudinary' });
+  }
+});

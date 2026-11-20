@@ -180,8 +180,20 @@ const Home = () => {
           </div>
           <div className="bg-green-900 rounded-2xl p-8 text-white">
             <h3 className="text-2xl font-bold mb-4">¿Buscas cupo?</h3>
-            <p className="mb-6">El proceso de admisiones para el año lectivo 2026 ya está abierto. Te invitamos a ser parte de nuestra comunidad educativa.</p>
-            <Button variant="secondary" className="w-full font-bold">Descargar Guía de Inscripción</Button>
+            <p className="mb-6">El proceso de admisiones para el año lectivo 2027 ya está abierto. Te invitamos a ser parte de nuestra comunidad educativa.</p>
+            <Button
+              asChild
+              variant="secondary"
+              className="w-full cursor-pointer font-bold"
+            >
+              <a
+                href="/docs/requisitos-matricula.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Descargar Guía de Inscripción
+              </a>
+            </Button>
           </div>
         </div>
       </section>

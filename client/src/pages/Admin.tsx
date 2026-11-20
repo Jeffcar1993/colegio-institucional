@@ -154,8 +154,7 @@ export default function AdminDashboard() {
       };
     }
 
-    // @ts-expect-error Cloudinary widget is loaded dynamically via script
-    const widget = (window as CloudinaryWindow).cloudinary.createUploadWidget(
+    const widget = (window as unknown as CloudinaryWindow).cloudinary.createUploadWidget(
       {
         cloudName: "dyknrzw2o",
         uploadPreset: "ied_kennedy_preset",
@@ -255,14 +254,46 @@ export default function AdminDashboard() {
   };
 
   const manejarArchivoCopla = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const archivo = event.target.files?.[0];
+    if (!archivo) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setNuevaCopla((prev) => ({ ...prev, imagen_url: String(reader.result ?? "") }));
-    };
-    reader.readAsDataURL(file);
+    if (!archivo.type.startsWith("image/")) {
+      alert("Selecciona un archivo de imagen válido.");
+      event.target.value = "";
+      return;
+    }
+
+    if (archivo.size > 5 * 1024 * 1024) {
+      alert("La imagen no puede superar 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setPublicandoCopla(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", archivo);
+      formData.append("upload_preset", "ied_kennedy_preset");
+      formData.append("folder", "coplas");
+
+      const res = await fetch("https://api.cloudinary.com/v1_1/dyknrzw2o/image/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.secure_url) {
+        throw new Error(data?.error?.message || "No se pudo subir la imagen a Cloudinary");
+      }
+
+      setNuevaCopla((prev) => ({ ...prev, imagen_url: data.secure_url }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo subir la imagen");
+    } finally {
+      setPublicandoCopla(false);
+      event.target.value = "";
+    }
   };
 
   const handlePublicarCopla = async (e: React.FormEvent) => {
@@ -279,11 +310,17 @@ export default function AdminDashboard() {
           imagen_url: nuevaCopla.imagen_url || null,
         }),
       });
-      if (res.ok) {
-        setNuevaCopla({ titulo: "", autor: "", descripcion: "", imagen_url: "" });
-        fetchData();
-        alert("Copla publicada");
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "No se pudo publicar la copla");
       }
+
+      setNuevaCopla({ titulo: "", autor: "", descripcion: "", imagen_url: "" });
+      await fetchData();
+      alert("Copla publicada");
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo publicar la copla");
     } finally {
       setPublicandoCopla(false);
     }
@@ -429,7 +466,13 @@ export default function AdminDashboard() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Seleccionar imagen de la copla</label>
-                    <Input type="file" accept="image/*" onChange={manejarArchivoCopla} className="file:mr-2 file:rounded-full file:border-0 file:bg-amber-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-amber-700" />
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={manejarArchivoCopla}
+                      disabled={publicandoCopla}
+                      className="file:mr-2 file:rounded-full file:border-0 file:bg-amber-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-amber-700"
+                    />
                     {nuevaCopla.imagen_url && (
                       <img src={nuevaCopla.imagen_url} alt="Previsualización de la copla" className="h-32 w-full object-cover rounded-xl border border-amber-200" />
                     )}
